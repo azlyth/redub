@@ -9,8 +9,8 @@ import ReactAudioPlayer from 'react-audio-player';
 import styles from './Home.css';
 
 
-const MOVIE_FILE = 'movie.mkv';
-const SUBTITLE_FILE = 'subtitles.srt';
+const MOVIE_FILE = 'input/movie.mkv';
+const SUBTITLE_FILE = 'input/subtitles.srt';
 const SCENE_START = { hours: 0, minutes: 44, seconds: 15 };
 const SCENE_END =   { hours: 0, minutes: 48, seconds: 55 };
 
@@ -104,7 +104,7 @@ class Clip extends Component {
   render() {
     return (
       <div key={this.props.file}>
-        <hr>
+        <hr/>
         <div style={{ padding: '10px' }} onClick={this.handleClick.bind(this)}>
           <div dangerouslySetInnerHTML={{__html: this.props.text}}></div>
           {this.renderAudioPlayer()}

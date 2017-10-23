@@ -51,5 +51,6 @@ main.js.map
 .idea
 npm-debug.log.*
 
+input/*
 audio-clips/*mp3
 ffmpeg
