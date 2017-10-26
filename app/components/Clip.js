@@ -1,8 +1,18 @@
 import React, { Component } from 'react';
 import ReactAudioPlayer from 'react-audio-player';
 import { Button, ButtonToolbar } from 'react-bootstrap';
-import TiMediaRecord from 'react-icons/lib/ti/media-record';
-import TiMediaPlayOutline from 'react-icons/lib/ti/media-play-outline';
+
+
+const styles = {
+  dialogue: {
+    fontSize: '2rem',
+    marginBottom: '10px'
+  },
+
+  button: {
+    fontSize: '1.3rem'
+  },
+}
 
 
 export default class Clip extends Component {
@@ -12,8 +22,11 @@ export default class Clip extends Component {
     this.state = { playing: false };
   }
 
-  handleClick() {
+  handlePlay() {
     this.setState({ playing: true });
+  }
+
+  handleRecord() {
   }
 
   renderAudioPlayer() {
@@ -33,10 +46,14 @@ export default class Clip extends Component {
       <div key={this.props.file}>
         <hr/>
         <div>
-          <div style={{ marginBottom: '10px' }} dangerouslySetInnerHTML={{__html: this.props.text}}></div>
-          <Button bsSize="small" onClick={this.handleClick.bind(this)}>Play</Button>
+          <b><div style={styles.dialogue} dangerouslySetInnerHTML={{__html: this.props.text}}></div></b>
+          <Button style={styles.button} bsSize="small" onClick={this.handlePlay.bind(this)}>
+            <b>PLAY</b>
+          </Button>
           &nbsp;&nbsp;
-          <Button bsSize="small" bsStyle="danger">Record</Button>
+          <Button style={styles.button} bsSize="small" bsStyle="danger" onClick={this.handleRecord.bind(this)}>
+            <b>RECORD</b>
+          </Button>
           {this.renderAudioPlayer()}
         </div>
       </div>
