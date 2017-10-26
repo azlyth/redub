@@ -44,7 +44,6 @@ export default class Clip extends Component {
   render() {
     return (
       <div key={this.props.file}>
-        <hr/>
         <div>
           <b><div style={styles.dialogue} dangerouslySetInnerHTML={{__html: this.props.text}}></div></b>
           <Button style={styles.button} bsSize="small" onClick={this.handlePlay.bind(this)}>
@@ -56,6 +55,7 @@ export default class Clip extends Component {
           </Button>
           {this.renderAudioPlayer()}
         </div>
+        <hr/>
       </div>
     );
   }

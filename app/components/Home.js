@@ -85,8 +85,10 @@ export default class Home extends Component {
     return (
       <div>
         <div className={styles.container} data-tid="container">
-          <h2>Redub</h2>
-          {this.renderBody()}
+          <div className={styles.video}></div>
+          <div className={styles.clips}>
+            {this.renderBody()}
+          </div>
         </div>
       </div>
     );

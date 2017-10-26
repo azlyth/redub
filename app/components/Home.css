@@ -1,14 +1,17 @@
 .container {
-  position: absolute;
-  top: 5%;
-  width: 100%;
+  /*width: 100%;*/
+  /*height: 100%;*/
   text-align: center;
 }
 
-.container h2 {
-  font-size: 5rem;
+.video {
+  margin: 32px;
+  height: 250px;
+  background-color: black;
 }
 
-.container a {
-  font-size: 1.4rem;
+.clips {
+  overflow-y: scroll;
+  height: 620px;
+  margin-top: 10px;
 }
