@@ -11,6 +11,7 @@ function extractClip(sceneStart, duration, filename) {
     ffmpeg(INPUT_MOVIE)
       .inputOption('-ss ' + sceneStart)
       .inputOption('-t ' + duration)
+      //.audioCodec('copy')
       .save(filename)
       .on('end', resolve);
   });
