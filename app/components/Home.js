@@ -23,7 +23,7 @@ export default class Home extends Component {
       done: false,
     };
 
-    this.extractAllClips = this.extractAllClips.bind(this)
+    this.extractAllClips = this.extractAllClips.bind(this);
   }
 
   componentDidMount() {
@@ -65,6 +65,7 @@ export default class Home extends Component {
 
   renderBody() {
     if (this.state.done) {
+      // Return a list of Clips
       return (
         <div>
           {this.state.clips.map(clip => {
@@ -73,6 +74,7 @@ export default class Home extends Component {
         </div>
       );
     } else {
+      // Return the status message
       return (
         <p>{this.state.statusMessage}</p>
       );
