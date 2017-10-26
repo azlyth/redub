@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import ReactAudioPlayer from 'react-audio-player';
+import { Button, ButtonToolbar } from 'react-bootstrap';
 import TiMediaRecord from 'react-icons/lib/ti/media-record';
-import TiMediaPlay from 'react-icons/lib/ti/media-play';
+import TiMediaPlayOutline from 'react-icons/lib/ti/media-play-outline';
 
 
 export default class Clip extends Component {
@@ -31,11 +32,11 @@ export default class Clip extends Component {
     return (
       <div key={this.props.file}>
         <hr/>
-        <div style={{ padding: '10px' }}>
-          <span dangerouslySetInnerHTML={{__html: this.props.text}}></span>
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <span onClick={this.handleClick.bind(this)}><TiMediaPlay size={30} /></span>
-          <span><TiMediaRecord size={30} color="red" /></span>
+        <div>
+          <div style={{ marginBottom: '10px' }} dangerouslySetInnerHTML={{__html: this.props.text}}></div>
+          <Button bsSize="small" onClick={this.handleClick.bind(this)}>Play</Button>
+          &nbsp;&nbsp;
+          <Button bsSize="small" bsStyle="danger">Record</Button>
           {this.renderAudioPlayer()}
         </div>
       </div>
