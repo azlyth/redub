@@ -9,9 +9,9 @@ import styles from './Home.css';
 import Clip from './Clip';
 
 
+const INPUT_MOVIE = '../input/movie.mkv';
 const INPUT_SUBTITLE = 'input/subtitles.srt';
-const SCENE_START = { hours: 0, minutes: 44, seconds: 15 };
-const SCENE_END =   { hours: 0, minutes: 48, seconds: 55 };
+const PROGRESS_INTERVAL = 50;
 
 
 export default class Home extends Component {
@@ -51,16 +51,7 @@ export default class Home extends Component {
           let duration = utils.msTime(utils.timeMs(sub.endTime) - utils.timeMs(sub.startTime));
           let outputFile = 'original-clips/output-' + i + '.mp3';
 
-          resolve({...sub, duration: duration, clipKey: i, playing: false});
-
-          //utils.extractClip(fix(sub.startTime), fix(duration), outputFile).then(() => {
-            //console.log('finishing');
-            //resolve({
-              //...sub,
-              //file: outputFile,
-              //playing: false,
-            //});
-          //});
+          resolve({ ...sub, duration: duration });
         });
     });
 
@@ -94,8 +85,8 @@ export default class Home extends Component {
       // Return a list of Clips
       return (
         <div>
-          {this.state.clips.map(clip => {
-            return (<Clip key={clip.clipKey} playVideo={this.playVideo} {...clip} />);
+          {this.state.clips.map((clip, index) => {
+            return (<Clip key={index} playVideo={this.playVideo} {...clip} />);
           })}
         </div>
       );
@@ -112,12 +103,12 @@ export default class Home extends Component {
       <div>
         <div className={styles.container} data-tid="container">
           <div className={styles.video}>
-            <ReactPlayer url={'../input/movie.mkv'}
+            <ReactPlayer url={INPUT_MOVIE}
               height="100%"
               width="100%"
               playing={this.state.videoPlaying}
               onProgress={this.stopIfPastEnd}
-              progressFrequency={100}
+              progressFrequency={PROGRESS_INTERVAL}
               ref={(videoPlayer) => { this.videoPlayer = videoPlayer }}
             />
           </div>
