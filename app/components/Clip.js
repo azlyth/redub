@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import ReactAudioPlayer from 'react-audio-player';
-import { Button, ButtonToolbar } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { timeMs } from '../utils';
 
 
@@ -13,7 +12,7 @@ const styles = {
   button: {
     fontSize: '1.3rem'
   },
-}
+};
 
 
 export default class Clip extends Component {
@@ -33,13 +32,19 @@ export default class Clip extends Component {
   }
 
   handleRecord() {
+    this.props.recordAudio(this.props.outputFile, timeMs(this.props.duration));
   }
 
   render() {
     return (
       <div>
         <div>
-          <b><div style={styles.dialogue} dangerouslySetInnerHTML={{__html: this.props.text}}></div></b>
+          <b>
+            <div
+              style={styles.dialogue}
+              dangerouslySetInnerHTML={{ __html: this.props.text }}
+            />
+          </b>
 
           <Button style={styles.button} bsSize="small" onClick={this.handlePlay}>
             <b>PLAY</b>
@@ -51,7 +56,7 @@ export default class Clip extends Component {
             <b>RECORD</b>
           </Button>
         </div>
-        <hr/>
+        <hr />
       </div>
     );
   }

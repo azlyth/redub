@@ -1,7 +1,5 @@
-// @flow
 import fs from 'fs';
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import subParser from 'subtitles-parser';
 import ReactPlayer from 'react-player';
 import utils from '../utils';
@@ -21,19 +19,25 @@ export default class Home extends Component {
 
     this.state = {
       statusMessage: 'Initializing...',
-      doneExtracting: false,
+      donePreparingClips: false,
       videoPlaying: false,
     };
 
-    this.extractAllClips = this.extractAllClips.bind(this);
     this.playVideo = this.playVideo.bind(this);
-    this.stopVideo = this.stopVideo.bind(this);
+    this.prepareClips = this.prepareClips.bind(this);
+    this.recordAudio = this.recordAudio.bind(this);
     this.stopIfPastEnd = this.stopIfPastEnd.bind(this);
+    this.stopVideo = this.stopVideo.bind(this);
   }
 
   componentDidMount() {
+    // Download FFMPEG if needed
+    utils.getFFMPEG();
+
     this.loadSubtitles();
-    utils.getFFMPEG().then(this.extractAllClips);
+    this.prepareClips();
+
+    this.prepareRecorder();
   }
 
   loadSubtitles() {
@@ -41,29 +45,48 @@ export default class Home extends Component {
     this.subtitles = subParser.fromSrt(subtitleData);
   }
 
-  extractAllClips() {
-    this.setState({ statusMessage: 'Extracting clips...'});
+  prepareClips() {
+    this.setState({ statusMessage: 'Preparing clips...' });
 
-    // Extract all the clips
+    // Parse all the clips
     let fix = (s) => s.replace(',', '.');
-    let extractPromises = this.subtitles.map((sub, i) => {
-        return new Promise((resolve, reject) => {
-          let duration = utils.msTime(utils.timeMs(sub.endTime) - utils.timeMs(sub.startTime));
-          let outputFile = 'original-clips/output-' + i + '.mp3';
-
-          resolve({ ...sub, duration: duration });
-        });
+    let clipPromises = this.subtitles.map((sub, i) => {
+      return new Promise((resolve) => {
+        let duration = utils.msTime(utils.timeMs(sub.endTime) - utils.timeMs(sub.startTime));
+        let outputFile = 'output-clips/'.concat(i, '.webm');
+        resolve({ ...sub, outputFile, duration });
+      });
     });
 
     // Show the list of subs when done downloading
-    Promise.all(extractPromises).then((clips) => {
-      this.setState({ clips, doneExtracting: true });
+    Promise.all(clipPromises).then((clips) => {
+      this.setState({ clips, donePreparingClips: true });
     });
   }
 
+  prepareRecorder() {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+      this.recorder = new MediaRecorder(stream);
+    });
+  }
+
+  // duration: time in milliseconds
+  recordAudio(outputFile, duration) {
+    this.recorder.ondataavailable = (recordedBlob) => {
+      utils.saveBlob(recordedBlob.data, outputFile);
+      console.log('Blob:', recordedBlob);
+      console.log('Saved to:', outputFile);
+    };
+
+    this.recorder.start();
+    setTimeout(() => { this.recorder.stop(); }, duration);
+  }
+
+  // start: integer time in seconds
+  // end:   integer time in seconds
   playVideo(start, end) {
     // Seek to the right time
-    this.videoPlayer.seekTo(start)
+    this.videoPlayer.seekTo(start);
 
     // Start the video and schedule its stop
     this.setState({ videoPlaying: true, clipEnd: end });
@@ -74,19 +97,25 @@ export default class Home extends Component {
   }
 
   stopIfPastEnd(data) {
-    console.log('testing', data.playedSeconds, this.state.clipEnd);
     if (data.playedSeconds > this.state.clipEnd) {
       this.stopVideo();
     }
   }
 
   renderBody() {
-    if (this.state.doneExtracting) {
+    if (this.state.donePreparingClips) {
       // Return a list of Clips
       return (
         <div>
           {this.state.clips.map((clip, index) => {
-            return (<Clip key={index} playVideo={this.playVideo} {...clip} />);
+            return (
+              <Clip
+                key={index}
+                playVideo={this.playVideo}
+                recordAudio={this.recordAudio}
+                {...clip}
+              />
+            );
           })}
         </div>
       );
@@ -103,13 +132,14 @@ export default class Home extends Component {
       <div>
         <div className={styles.container} data-tid="container">
           <div className={styles.video}>
-            <ReactPlayer url={INPUT_MOVIE}
+            <ReactPlayer
+              url={INPUT_MOVIE}
               height="100%"
               width="100%"
               playing={this.state.videoPlaying}
               onProgress={this.stopIfPastEnd}
               progressFrequency={PROGRESS_INTERVAL}
-              ref={(videoPlayer) => { this.videoPlayer = videoPlayer }}
+              ref={(videoPlayer) => { this.videoPlayer = videoPlayer; }}
             />
           </div>
           <div className={styles.clips}>
