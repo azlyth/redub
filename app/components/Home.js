@@ -53,8 +53,8 @@ export default class Home extends Component {
     let clipPromises = this.subtitles.map((sub, i) => {
       return new Promise((resolve) => {
         let duration = utils.msTime(utils.timeMs(sub.endTime) - utils.timeMs(sub.startTime));
-        let outputFile = 'output-clips/'.concat(i, '.webm');
-        resolve({ ...sub, outputFile, duration });
+        let dubFile = 'output-clips/'.concat(i, '.webm');
+        resolve({ ...sub, dubFile, duration });
       });
     });
 
@@ -74,8 +74,6 @@ export default class Home extends Component {
   recordAudio(outputFile, duration) {
     this.recorder.ondataavailable = (recordedBlob) => {
       utils.saveBlob(recordedBlob.data, outputFile);
-      console.log('Blob:', recordedBlob);
-      console.log('Saved to:', outputFile);
     };
 
     this.recorder.start();

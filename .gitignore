@@ -52,5 +52,5 @@ main.js.map
 npm-debug.log.*
 
 input/*
-audio-clips/*mp3
+output-clips/*webm
 ffmpeg
