@@ -29,20 +29,28 @@ function mergeAudio(clipList, start, end, outputFile) {
       ffmpeg().addInput(INPUT_MOVIE)
     );
 
-    // Prepare the delay filters
+    // Start the clips at the right time by delaying them until their start time
     let delayedStreams = [];
     let delayFilters = clipList.map((clip, i) => {
-      let start = timeMs(clip.startTime);
+      let clipStart = timeMs(clip.startTime);
       let outputStream = `[delay${i}]`;
       delayedStreams.push(outputStream);
-      return `[${i + 1}:0] adelay=${start}|${start} ${outputStream}`;
+      return `[${i + 1}:0] adelay=${clipStart}|${clipStart} ${outputStream}`;
     });
 
-    // Prepare the audio merge filter
-    let amixFilter = `[0:1]${delayedStreams.join('')} amix=inputs=${delayedStreams.length + 1}`;
+    // Silence the video's audio during each clip
+    let silentSections = clipList.map(clip => {
+      let clipStart = timeMs(clip.startTime) / 1000.0;
+      let clipEnd = timeMs(clip.endTime) / 1000.0;
+      return `volume=enable='between(t, ${clipStart}, ${clipEnd})':volume=0`;
+    });
+    let silentFilter = `[0:1] ${silentSections.join(', ')} [videoAudio]`;
+
+    // Merge the adjusted video audio and all the audio clips
+    let amixFilter = `[videoAudio]${delayedStreams.join('')} amix=inputs=${delayedStreams.length + 1}`;
 
     // Run the command
-    let allFilters = delayFilters.concat([amixFilter]);
+    let allFilters = [silentFilter].concat(delayFilters, [amixFilter]);
     console.log(allFilters);
     command
       .complexFilter(allFilters)
