@@ -2,11 +2,13 @@ import fs from 'fs';
 import React, { Component } from 'react';
 import subParser from 'subtitles-parser';
 import ReactPlayer from 'react-player';
+import { Button } from 'react-bootstrap';
 import utils from '../utils';
 import styles from './Home.css';
 import Clip from './Clip';
 
 
+const CLIP_DIRECTORY = 'output-clips';
 const INPUT_MOVIE = '../input/movie.mkv';
 const INPUT_SUBTITLE = 'input/subtitles.srt';
 const PROGRESS_INTERVAL = 50;
@@ -28,6 +30,7 @@ export default class Home extends Component {
     this.recordAudio = this.recordAudio.bind(this);
     this.stopIfPastEnd = this.stopIfPastEnd.bind(this);
     this.stopVideo = this.stopVideo.bind(this);
+    this.export = this.export.bind(this);
   }
 
   componentDidMount() {
@@ -53,7 +56,7 @@ export default class Home extends Component {
     let clipPromises = this.subtitles.map((sub, i) => {
       return new Promise((resolve) => {
         let duration = utils.msTime(utils.timeMs(sub.endTime) - utils.timeMs(sub.startTime));
-        let dubFile = 'output-clips/'.concat(i, '.webm');
+        let dubFile = CLIP_DIRECTORY.concat('/', i, '.webm');
         resolve({ ...sub, dubFile, duration });
       });
     });
@@ -82,12 +85,13 @@ export default class Home extends Component {
 
   // start: integer time in seconds
   // end:   integer time in seconds
-  playVideo(start, end) {
+  playVideo(start, end, withSound) {
     // Seek to the right time
     this.videoPlayer.seekTo(start);
 
     // Start the video and schedule its stop
-    this.setState({ videoPlaying: true, clipEnd: end });
+    let volume = withSound ? 1.0 : 0;
+    this.setState({ videoPlaying: true, volume: volume, clipEnd: end });
   }
 
   stopVideo() {
@@ -98,6 +102,29 @@ export default class Home extends Component {
     if (data.playedSeconds > this.state.clipEnd) {
       this.stopVideo();
     }
+  }
+
+  export() {
+    // Ignore hidden files, extract sub index, and sort
+    let existingClips = fs.readdirSync(CLIP_DIRECTORY).filter(f => f[0] != '.');
+    existingClips = existingClips.map(f => parseInt(f.replace('.webm', '')));
+    existingClips.sort((a, b) => a - b);
+
+    // Get the corresponding subs
+    let clips = existingClips.map(i => this.state.clips[i]);
+
+    // Get the first and last clips
+    let firstClip = this.subtitles[existingClips[0]];
+    let lastClip = this.subtitles[existingClips[existingClips.length - 1]];
+
+    // Add the clips to the video
+    console.log('Starting merge...');
+    utils.mergeAudio(
+      clips,
+      firstClip.startTime,
+      lastClip.endTime,
+      'final.mp4'
+    ).then(() => { console.log('Done!'); });
   }
 
   renderBody() {
@@ -134,12 +161,20 @@ export default class Home extends Component {
               url={INPUT_MOVIE}
               height="100%"
               width="100%"
+              volume={this.state.volume}
               playing={this.state.videoPlaying}
               onProgress={this.stopIfPastEnd}
               progressFrequency={PROGRESS_INTERVAL}
               ref={(videoPlayer) => { this.videoPlayer = videoPlayer; }}
             />
           </div>
+
+          <div>
+            <Button onClick={this.export}>
+              EXPORT
+            </Button>
+          </div>
+
           <div className={styles.clips}>
             {this.renderBody()}
           </div>

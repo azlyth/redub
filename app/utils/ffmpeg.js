@@ -1,22 +1,12 @@
 import fs from 'fs';
 import ffbinaries from 'ffbinaries';
 import ffmpeg from 'fluent-ffmpeg';
+import { timeMs } from './subtitles';
 
 
 const INPUT_MOVIE = 'input/movie.mkv';
 const FFMPEG_LOCATION = './ffmpeg';
 
-
-function extractClip(sceneStart, duration, filename) {
-  return new Promise((resolve, reject) => {
-    ffmpeg(INPUT_MOVIE)
-      .inputOption('-ss ' + sceneStart)
-      .inputOption('-t ' + duration)
-      //.audioCodec('copy')
-      .save(filename)
-      .on('end', resolve);
-  });
-}
 
 function getFFMPEG() {
   return new Promise((resolve, reject) => {
@@ -31,25 +21,42 @@ function getFFMPEG() {
   );
 }
 
-function mergeAudio(audioFile, outputFile, position) {
+function mergeAudio(clipList, start, end, outputFile) {
   return new Promise((resolve, reject) => {
-    ffmpeg()
-      .input(INPUT_MOVIE)
-      .input(audioFile)
-      .complexFilter([
-        '[1:0] adelay=2728000|2728000 [delayed]', // put the clip at the right time
-        '[0:1][delayed] amix=inputs=2', // merge the original video's audio and delayed audio
-      ])
+    // Add the video file and clips as inputs
+    let command = clipList.reduce(
+      (cmd, clip) => cmd.addInput(clip.dubFile),
+      ffmpeg().addInput(INPUT_MOVIE)
+    );
+
+    // Prepare the delay filters
+    let delayedStreams = [];
+    let delayFilters = clipList.map((clip, i) => {
+      let start = timeMs(clip.startTime);
+      let outputStream = `[delay${i}]`;
+      delayedStreams.push(outputStream);
+      return `[${i + 1}:0] adelay=${start}|${start} ${outputStream}`;
+    });
+
+    // Prepare the audio merge filter
+    let amixFilter = `[0:1]${delayedStreams.join('')} amix=inputs=${delayedStreams.length + 1}`;
+
+    // Run the command
+    let allFilters = delayFilters.concat([amixFilter]);
+    console.log(allFilters);
+    command
+      .complexFilter(allFilters)
       .outputOption('-map 0:0') // use the video's video
+      .outputOption(`-ss ${start.replace(',', '.')}`)
+      .outputOption(`-to ${end.replace(',', '.')}`)
       .audioCodec('aac')
-      .videoCodec('copy')
+      .videoCodec('libx264')
       .save(outputFile)
       .on('end', resolve);
   });
 }
 
 export default {
-  extractClip,
   getFFMPEG,
   mergeAudio,
-}
+};

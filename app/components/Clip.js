@@ -31,16 +31,20 @@ export default class Clip extends Component {
     };
   }
 
-  handlePlay() {
+  playVideo(withSound) {
     // Convert the start and end to seconds
     let start = timeMs(this.props.startTime) / 1000.0;
     let end = timeMs(this.props.endTime) / 1000.0;
+    this.props.playVideo(start, end, withSound);
+  }
 
-    this.props.playVideo(start, end);
+  handlePlay() {
+    this.playVideo(true);
   }
 
   handlePlayDub() {
     this.setState({ playingDub: true });
+    this.playVideo(false);
   }
 
   handleRecord() {
@@ -49,6 +53,7 @@ export default class Clip extends Component {
       timeMs(this.props.duration),
       () => { this.setState({ recorded: true }); }
     );
+    this.playVideo(false);
   }
 
   renderPlayDubButton() {
