@@ -44,8 +44,11 @@ export default class Clip extends Component {
   }
 
   handleRecord() {
-    this.props.recordAudio(this.props.dubFile, timeMs(this.props.duration));
-    this.setState({ recorded: true });
+    this.props.recordAudio(
+      this.props.dubFile,
+      timeMs(this.props.duration),
+      () => { this.setState({ recorded: true }); }
+    );
   }
 
   renderPlayDubButton() {

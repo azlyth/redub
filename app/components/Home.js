@@ -71,9 +71,9 @@ export default class Home extends Component {
   }
 
   // duration: time in milliseconds
-  recordAudio(outputFile, duration) {
+  recordAudio(outputFile, duration, successCallback) {
     this.recorder.ondataavailable = (recordedBlob) => {
-      utils.saveBlob(recordedBlob.data, outputFile);
+      utils.saveBlob(recordedBlob.data, outputFile, successCallback);
     };
 
     this.recorder.start();
