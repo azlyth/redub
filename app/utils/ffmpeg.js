@@ -4,6 +4,7 @@ import ffmpeg from 'fluent-ffmpeg';
 
 
 const INPUT_MOVIE = 'input/movie.mkv';
+const FFMPEG_LOCATION = './ffmpeg';
 
 
 function extractClip(sceneStart, duration, filename) {
@@ -19,7 +20,7 @@ function extractClip(sceneStart, duration, filename) {
 
 function getFFMPEG() {
   return new Promise((resolve, reject) => {
-    if (fs.existsSync('./ffmpeg')) {
+    if (fs.existsSync(FFMPEG_LOCATION)) {
       resolve();
     } else {
       ffbinaries.downloadFiles('ffmpeg', (err, data)  => {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactAudioPlayer from 'react-audio-player';
 import { Button } from 'react-bootstrap';
-import { timeMs } from '../utils';
+import { fileExists, timeMs } from '../utils';
 
 
 const styles = {
@@ -27,7 +27,7 @@ export default class Clip extends Component {
 
     this.state = {
       playingDub: false,
-      recorded: false,
+      recorded: fileExists(props.dubFile),
     };
   }
 

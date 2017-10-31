@@ -1,5 +1,9 @@
 import fs from 'fs';
 
+function fileExists(path) {
+  return fs.existsSync(path);
+}
+
 function saveBlob(blob, filename, successCallback) {
   let reader = new FileReader();
   reader.onload = () => {
@@ -10,5 +14,6 @@ function saveBlob(blob, filename, successCallback) {
 }
 
 export default {
+  fileExists,
   saveBlob,
 };

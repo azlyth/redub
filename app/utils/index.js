@@ -1,9 +1,10 @@
 import { extractClip, getFFMPEG, mergeAudio } from './ffmpeg';
-import { saveBlob } from './file';
+import { fileExists, saveBlob } from './file';
 import { msTime, timeMs } from './subtitles';
 
 export default {
   extractClip,
+  fileExists,
   getFFMPEG,
   mergeAudio,
   msTime,
