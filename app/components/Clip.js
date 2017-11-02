@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
-import { fileExists, timeMs } from '../utils';
+import * as u from '../utils';
 
 
 const styles = {
@@ -23,20 +23,21 @@ export default class Clip extends Component {
     this.handlePlay = this.handlePlay.bind(this);
     this.handleRecord = this.handleRecord.bind(this);
     this.handlePlayDub = this.handlePlayDub.bind(this);
+    this.handleRemoveDub = this.handleRemoveDub.bind(this);
 
     // Initialize the hacky play counter
     this.renderAudioCounter = 0;
 
     this.state = {
       playingDub: false,
-      recorded: fileExists(props.dubFile),
+      recorded: u.fileExists(props.dubFile),
     };
   }
 
   playVideo(withSound) {
     // Convert the start and end to seconds
-    const start = timeMs(this.props.startTime) / 1000.0;
-    const end = timeMs(this.props.endTime) / 1000.0;
+    const start = u.timeMs(this.props.startTime) / 1000.0;
+    const end = u.timeMs(this.props.endTime) / 1000.0;
     this.props.playVideo(start, end, withSound);
   }
 
@@ -49,10 +50,16 @@ export default class Clip extends Component {
     this.playVideo(false);
   }
 
+  handleRemoveDub() {
+    console.log(u);
+    u.deleteFile(this.props.dubFile);
+    this.setState({ recorded: false });
+  }
+
   handleRecord() {
     this.props.recordAudio(
       this.props.dubFile,
-      timeMs(this.props.duration),
+      u.timeMs(this.props.duration),
       () => { this.setState({ recorded: true }); }
     );
     this.playVideo(false);
@@ -62,8 +69,12 @@ export default class Clip extends Component {
     if (this.state.recorded) {
       return (
         <span>
-          <Button style={styles.button} bsSize="small" onClick={this.handlePlayDub}>
+          <Button style={styles.button} bsSize="small" bsStyle="success" onClick={this.handlePlayDub}>
             <b>PLAY DUB</b>
+          </Button>
+          &nbsp;&nbsp;
+          <Button style={styles.button} bsSize="small" bsStyle="warning" onClick={this.handleRemoveDub}>
+            <b>REMOVE DUB</b>
           </Button>
           &nbsp;&nbsp;
         </span>
@@ -101,7 +112,7 @@ export default class Clip extends Component {
             />
           </b>
 
-          <Button style={styles.button} bsSize="small" onClick={this.handlePlay}>
+          <Button style={styles.button} bsSize="small" bsStyle="success" onClick={this.handlePlay}>
             <b>PLAY</b>
           </Button>
           &nbsp;&nbsp;
