@@ -37,11 +37,10 @@ export default class Clip extends Component {
     this.handleRemoveDub = this.handleRemoveDub.bind(this);
 
     // Initialize the hacky play counter
-    this.renderAudioCounter = 0;
-
     this.state = {
       playingDub: false,
       recorded: u.fileExists(props.dubFile),
+      renderAudioCounter: 0,
     };
   }
 
@@ -57,7 +56,10 @@ export default class Clip extends Component {
   }
 
   handlePlayDub() {
-    this.setState({ playingDub: true });
+    this.setState({
+      playingDub: true,
+      renderAudioCounter: this.state.renderAudioCounter + 1,
+    });
     this.playVideo(false);
   }
 
@@ -98,8 +100,7 @@ export default class Clip extends Component {
       // A true hack. Basically, the browser will cache the audio clip unless the 'Cache-Control'
       // header is set to 'no-cache'. So in order to get around that, set the querystring of the
       // URL to force the browser to re-download the audio clip.
-      this.renderAudioCounter += 1;
-      const audioSource = '../'.concat(this.props.dubFile, '?', this.renderAudioCounter);
+      const audioSource = '../'.concat(this.props.dubFile, '?', this.state.renderAudioCounter);
 
       return (
         <audio
