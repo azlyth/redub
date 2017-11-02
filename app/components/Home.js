@@ -44,7 +44,7 @@ export default class Home extends Component {
   }
 
   loadSubtitles() {
-    let subtitleData = fs.readFileSync(INPUT_SUBTITLE, 'utf8');
+    const subtitleData = fs.readFileSync(INPUT_SUBTITLE, 'utf8');
     this.subtitles = subParser.fromSrt(subtitleData);
   }
 
@@ -52,11 +52,10 @@ export default class Home extends Component {
     this.setState({ statusMessage: 'Preparing clips...' });
 
     // Parse all the clips
-    let fix = (s) => s.replace(',', '.');
-    let clipPromises = this.subtitles.map((sub, i) => {
+    const clipPromises = this.subtitles.map((sub, i) => {
       return new Promise((resolve) => {
-        let duration = utils.msTime(utils.timeMs(sub.endTime) - utils.timeMs(sub.startTime));
-        let dubFile = CLIP_DIRECTORY.concat('/', i, '.webm');
+        const duration = utils.msTime(utils.timeMs(sub.endTime) - utils.timeMs(sub.startTime));
+        const dubFile = CLIP_DIRECTORY.concat('/', i, '.webm');
         resolve({ ...sub, dubFile, duration });
       });
     });
@@ -90,7 +89,7 @@ export default class Home extends Component {
     this.videoPlayer.seekTo(start);
 
     // Start the video and schedule its stop
-    let volume = withSound ? 1.0 : 0;
+    const volume = withSound ? 1.0 : 0;
     this.setState({ videoPlaying: true, volume: volume, clipEnd: end });
   }
 
@@ -106,16 +105,16 @@ export default class Home extends Component {
 
   export() {
     // Ignore hidden files, extract sub index, and sort
-    let existingClips = fs.readdirSync(CLIP_DIRECTORY).filter(f => f[0] != '.');
-    existingClips = existingClips.map(f => parseInt(f.replace('.webm', '')));
+    let existingClips = fs.readdirSync(CLIP_DIRECTORY).filter(f => f[0] !== '.');
+    existingClips = existingClips.map(f => parseInt(f.replace('.webm', ''), 10));
     existingClips.sort((a, b) => a - b);
 
     // Get the corresponding subs
-    let clips = existingClips.map(i => this.state.clips[i]);
+    const clips = existingClips.map(i => this.state.clips[i]);
 
     // Get the first and last clips
-    let firstClip = this.subtitles[existingClips[0]];
-    let lastClip = this.subtitles[existingClips[existingClips.length - 1]];
+    const firstClip = this.subtitles[existingClips[0]];
+    const lastClip = this.subtitles[existingClips[existingClips.length - 1]];
 
     // Add the clips to the video
     console.log('Starting merge...');
@@ -144,12 +143,12 @@ export default class Home extends Component {
           })}
         </div>
       );
-    } else {
-      // Return the status message
-      return (
-        <p>{this.state.statusMessage}</p>
-      );
     }
+
+    // Return the status message
+    return (
+      <p>{this.state.statusMessage}</p>
+    );
   }
 
   render() {
