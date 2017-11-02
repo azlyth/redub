@@ -11,6 +11,7 @@
   },
   "rules": {
     "arrow-parens": ["off"],
+    "jsx-a11y/media-has-caption": "off",
     "compat/compat": "error",
     "consistent-return": "off",
     "comma-dangle": "off",

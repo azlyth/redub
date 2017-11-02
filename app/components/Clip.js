@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import * as u from '../utils';
 
@@ -16,6 +17,16 @@ const styles = {
 
 
 export default class Clip extends Component {
+
+  static propTypes = {
+    dubFile: PropTypes.string.isRequired,
+    startTime: PropTypes.string.isRequired,
+    endTime: PropTypes.string.isRequired,
+    playVideo: PropTypes.func.isRequired,
+    recordAudio: PropTypes.func.isRequired,
+    text: PropTypes.string.isRequired,
+    duration: PropTypes.string.isRequired,
+  }
 
   constructor(props) {
     super(props);

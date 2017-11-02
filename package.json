@@ -192,6 +192,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "font-awesome": "^4.7.0",
     "history": "^4.6.3",
+    "prop-types": "^15.6.0",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.5",
     "react-dom": "^15.6.1",
