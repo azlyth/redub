@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactAudioPlayer from 'react-audio-player';
 import { Button } from 'react-bootstrap';
 import { fileExists, timeMs } from '../utils';
 
@@ -72,7 +71,7 @@ export default class Clip extends Component {
   renderAudioPlayer() {
     if (this.state.playingDub) {
       return (
-        <ReactAudioPlayer
+        <audio
           src={'../'.concat(this.props.dubFile)}
           autoPlay
           onEnded={() => { this.setState({ playingDub: false }); }}
