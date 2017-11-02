@@ -155,6 +155,7 @@ export default class Home extends Component {
     return (
       <div>
         <div className={styles.container} data-tid="container">
+
           <div className={styles.video}>
             <ReactPlayer
               url={INPUT_MOVIE}
@@ -172,7 +173,7 @@ export default class Home extends Component {
             {this.renderBody()}
           </div>
 
-          <div className={styles.exportButtonContainer}>
+          <div className={styles.footer}>
             <Button className={styles.exportButton} onClick={this.export}>
               <b>EXPORT</b>
             </Button>

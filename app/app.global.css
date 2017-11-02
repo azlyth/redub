@@ -1,38 +1,7 @@
 @import "~font-awesome/css/font-awesome.css";
 
 body {
-  position: relative;
   color: white;
-  height: 100vh;
   background-color: #172232;
-  background-image: rgba(0, 216, 255, 0.5);
   font-family: Arial, Helvetica, Helvetica Neue, serif;
-}
-
-h2 {
-  margin: 0;
-  font-size: 2.25rem;
-  font-weight: bold;
-  letter-spacing: -0.025em;
-  color: #fff;
-}
-
-p {
-  font-size: 24px;
-}
-
-li {
-  list-style: none;
-}
-
-a {
-  color: white;
-  opacity: 0.75;
-  text-decoration: none;
-}
-
-a:hover {
-  opacity: 1;
-  text-decoration: none;
-  cursor: pointer;
 }

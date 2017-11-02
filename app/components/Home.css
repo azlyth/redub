@@ -1,6 +1,10 @@
 .container {
+  display: flex;
+  flex-flow: column;
   width: 100%;
+  height: 100vh;
   text-align: center;
+  overflow: hidden;
 }
 
 .video {
@@ -9,14 +13,18 @@
 }
 
 .clips {
+  flex: 1;
   overflow-y: scroll;
-  height: 444px;
   padding-top: 15px;
 }
 
-.exportButtonContainer {
+.footer {
   background: #0B1626;
   border: 1px white;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .exportButton {
