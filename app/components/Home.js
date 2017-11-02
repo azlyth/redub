@@ -4,8 +4,8 @@ import subParser from 'subtitles-parser';
 import ReactPlayer from 'react-player';
 import { Button } from 'react-bootstrap';
 import utils from '../utils';
-import styles from './Home.css';
 import Clip from './Clip';
+import styles from './Home.css';
 
 
 const CLIP_DIRECTORY = 'output-clips';
@@ -168,15 +168,16 @@ export default class Home extends Component {
             />
           </div>
 
-          <div>
-            <Button onClick={this.export}>
-              EXPORT
-            </Button>
-          </div>
-
           <div className={styles.clips}>
             {this.renderBody()}
           </div>
+
+          <div className={styles.exportButtonContainer}>
+            <Button className={styles.exportButton} onClick={this.export}>
+              <b>EXPORT</b>
+            </Button>
+          </div>
+
         </div>
       </div>
     );
