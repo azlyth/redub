@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import subParser from 'subtitles-parser';
 import ReactPlayer from 'react-player';
 import { Button } from 'react-bootstrap';
+import ClipList from './ClipList';
 import utils from '../utils';
-import Clip from './Clip';
 import styles from './Home.css';
 
 
@@ -128,20 +128,12 @@ export default class Home extends Component {
 
   renderBody() {
     if (this.state.donePreparingClips) {
-      // Return a list of Clips
       return (
-        <div>
-          {this.state.clips.map((clip, index) => {
-            return (
-              <Clip
-                key={index}
-                playVideo={this.playVideo}
-                recordAudio={this.recordAudio}
-                {...clip}
-              />
-            );
-          })}
-        </div>
+        <ClipList
+          clips={this.state.clips}
+          playVideo={this.playVideo}
+          recordAudio={this.recordAudio}
+        />
       );
     }
 

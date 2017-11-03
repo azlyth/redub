@@ -83,11 +83,11 @@ export default class Clip extends Component {
     if (this.state.recorded) {
       return (
         <span>
-          <Button className={styles.button} bsSize="small" bsStyle="success" onClick={this.handlePlayDub}>
+          <Button bsSize="small" bsStyle="success" onClick={this.handlePlayDub}>
             <b>PLAY DUB</b>
           </Button>
           &nbsp;&nbsp;
-          <Button className={styles.button} bsSize="small" bsStyle="warning" onClick={this.handleRemoveDub}>
+          <Button bsSize="small" bsStyle="warning" onClick={this.handleRemoveDub}>
             <b>REMOVE DUB</b>
           </Button>
           &nbsp;&nbsp;
@@ -98,7 +98,7 @@ export default class Clip extends Component {
 
   renderAudioPlayer() {
     if (this.state.playingDub) {
-      // A true hack. Basically, the browser will cache the audio clip unless the 'Cache-Control'
+      // HACK: Basically, the browser will cache the audio clip unless the 'Cache-Control'
       // header is set to 'no-cache'. So in order to get around that, set the querystring of the
       // URL to force the browser to re-download the audio clip.
       const audioSource = '../'.concat(this.props.dubFile, '?', this.state.renderAudioCounter);
@@ -121,14 +121,14 @@ export default class Clip extends Component {
 
         { this.renderDialogue() }
 
-          <Button className={styles.button} bsSize="small" bsStyle="success" onClick={this.handlePlay}>
+          <Button bsSize="small" bsStyle="success" onClick={this.handlePlay}>
             <b>PLAY</b>
           </Button>
           &nbsp;&nbsp;
 
           { this.renderPlayDubButton() }
 
-          <Button className={styles.button} bsSize="small" bsStyle="danger" onClick={this.handleRecord}>
+          <Button bsSize="small" bsStyle="danger" onClick={this.handleRecord}>
             <b>RECORD</b>
           </Button>
 
