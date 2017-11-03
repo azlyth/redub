@@ -52,5 +52,5 @@ main.js.map
 npm-debug.log.*
 
 input/*
-output-clips/*webm
+recorded-clips/*webm
 ffmpeg
