@@ -1,6 +1,6 @@
 @import "~font-awesome/css/font-awesome.css";
 
-body {
+#root {
   color: white;
   background-color: #172232;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
