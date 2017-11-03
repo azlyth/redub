@@ -7,12 +7,12 @@
   overflow: hidden;
 }
 
-.video {
+.header {
   height: 280px;
   background-color: black;
 }
 
-.clips {
+.body {
   flex: 1;
   overflow-y: scroll;
   padding-top: 15px;
@@ -20,8 +20,6 @@
 
 .footer {
   background: #0B1626;
-  border: 1px white;
-  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;

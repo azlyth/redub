@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 
 
 function deleteFile(path) {
@@ -7,6 +8,18 @@ function deleteFile(path) {
 
 function fileExists(path) {
   return fs.existsSync(path);
+}
+
+function makeDirectory(path) {
+  // Simulate `mkdir -p`
+  try {
+    fs.mkdirSync(path);
+  } catch(e) {
+    if (e.errno === 34) {
+      makeDirectory(path.dirname(path));
+      makeDirectory(path);
+    }
+  }
 }
 
 function saveBlob(blob, filename, successCallback) {
@@ -21,5 +34,6 @@ function saveBlob(blob, filename, successCallback) {
 export default {
   deleteFile,
   fileExists,
+  makeDirectory,
   saveBlob,
 };

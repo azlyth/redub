@@ -1,0 +1,12 @@
+.projectListContainer {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.projectList {
+  margin-bottom: 0;
+}
+
+.project {
+  color: black;
+}

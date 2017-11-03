@@ -1,6 +1,6 @@
 {
-  "name": "electron-react-boilerplate",
-  "productName": "ElectronReact",
+  "name": "redub",
+  "productName": "Redub",
   "version": "0.12.0",
   "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
   "scripts": {
@@ -31,8 +31,8 @@
   },
   "browserslist": "electron 1.6",
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.develar.ElectronReact",
+    "productName": "Redub",
+    "appId": "me.ptrvldz.redub",
     "files": [
       "dist/",
       "node_modules/",
@@ -73,16 +73,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chentsulin/electron-react-boilerplate.git"
+    "url": "git+https://github.com/azlyth/redub.git"
   },
   "author": {
-    "name": "C. T. Lin",
-    "email": "chentsulin@gmail.com",
-    "url": "https://github.com/chentsulin"
+    "name": "Peter Valdez",
+    "url": "https://github.com/azlyth"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/chentsulin/electron-react-boilerplate/issues"
+    "url": "https://github.com/azlyth/redub/issues"
   },
   "keywords": [
     "electron",
@@ -95,7 +94,7 @@
     "hot",
     "reload"
   ],
-  "homepage": "https://github.com/chentsulin/electron-react-boilerplate#readme",
+  "homepage": "https://github.com/azlyth/redub",
   "jest": {
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
@@ -188,7 +187,7 @@
   "dependencies": {
     "devtron": "^1.4.0",
     "electron-debug": "^1.2.0",
-    "ffbinaries": "^1.0.2",
+    "ffbinaries": "azlyth/ffbinaries-node#9ee6a70",
     "fluent-ffmpeg": "^2.1.2",
     "font-awesome": "^4.7.0",
     "history": "^4.6.3",
@@ -197,7 +196,6 @@
     "react-bootstrap": "^0.31.5",
     "react-dom": "^15.6.1",
     "react-hot-loader": "3.0.0-beta.6",
-    "react-icons": "^2.2.7",
     "react-player": "^0.25.3",
     "react-redux": "^5.0.5",
     "react-router": "^4.1.1",

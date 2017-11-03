@@ -1,16 +1,13 @@
 import fs from 'fs';
 import React, { Component } from 'react';
-import subParser from 'subtitles-parser';
 import ReactPlayer from 'react-player';
 import { Button } from 'react-bootstrap';
 import ClipList from './ClipList';
-import utils from '../utils';
+import ProjectSelector from './ProjectSelector';
+import * as u from '../utils';
 import styles from './Home.css';
 
 
-const CLIP_DIRECTORY = 'output-clips';
-const INPUT_MOVIE = '../input/movie.mkv';
-const INPUT_SUBTITLE = 'input/subtitles.srt';
 const PROGRESS_INTERVAL = 50;
 
 
@@ -20,66 +17,30 @@ export default class Home extends Component {
     super(props);
 
     this.state = {
-      statusMessage: 'Initializing...',
-      donePreparingClips: false,
       videoPlaying: false,
+
+      // Project configuration should look as follows
+      // projectConfig: { video: '/path/to/video', subtitles: '/path/to/subtitles' }
+      projectConfig: null,
     };
 
     this.playVideo = this.playVideo.bind(this);
-    this.prepareClips = this.prepareClips.bind(this);
-    this.recordAudio = this.recordAudio.bind(this);
     this.stopIfPastEnd = this.stopIfPastEnd.bind(this);
     this.stopVideo = this.stopVideo.bind(this);
     this.export = this.export.bind(this);
+    this.projectChosen = this.projectChosen.bind(this);
   }
 
   componentDidMount() {
-    // Download FFMPEG if needed
-    utils.getFFMPEG();
-
-    this.loadSubtitles();
-    this.prepareClips();
-
-    this.prepareRecorder();
+    u.getFFMPEG();
   }
 
-  loadSubtitles() {
-    const subtitleData = fs.readFileSync(INPUT_SUBTITLE, 'utf8');
-    this.subtitles = subParser.fromSrt(subtitleData);
+  projectChosen(projectConfig) {
+    this.setState({ projectConfig });
   }
 
-  prepareClips() {
-    this.setState({ statusMessage: 'Preparing clips...' });
-
-    // Parse all the clips
-    const clipPromises = this.subtitles.map((sub, i) => {
-      return new Promise((resolve) => {
-        const duration = utils.msTime(utils.timeMs(sub.endTime) - utils.timeMs(sub.startTime));
-        const dubFile = CLIP_DIRECTORY.concat('/', i, '.webm');
-        resolve({ ...sub, dubFile, duration });
-      });
-    });
-
-    // Show the list of subs when done downloading
-    Promise.all(clipPromises).then((clips) => {
-      this.setState({ clips, donePreparingClips: true });
-    });
-  }
-
-  prepareRecorder() {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-      this.recorder = new MediaRecorder(stream);
-    });
-  }
-
-  // duration: time in milliseconds
-  recordAudio(outputFile, duration, successCallback) {
-    this.recorder.ondataavailable = (recordedBlob) => {
-      utils.saveBlob(recordedBlob.data, outputFile, successCallback);
-    };
-
-    this.recorder.start();
-    setTimeout(() => { this.recorder.stop(); }, duration);
+  workingOnProject() {
+    return this.state.projectConfig !== null;
   }
 
   // start: integer time in seconds
@@ -110,7 +71,7 @@ export default class Home extends Component {
     existingClips.sort((a, b) => a - b);
 
     // Get the corresponding subs
-    const clips = existingClips.map(i => this.state.clips[i]);
+    const clips = existingClips.map(i => this.clipList.state.clips[i]);
 
     // Get the first and last clips
     const firstClip = this.subtitles[existingClips[0]];
@@ -118,7 +79,7 @@ export default class Home extends Component {
 
     // Add the clips to the video
     console.log('Starting merge...');
-    utils.mergeAudio(
+    u.mergeAudio(
       clips,
       firstClip.startTime,
       lastClip.endTime,
@@ -126,21 +87,45 @@ export default class Home extends Component {
     ).then(() => { console.log('Done!'); });
   }
 
+  renderHeader() {
+    if (this.workingOnProject()) {
+      return (
+        <ReactPlayer
+          url={this.state.projectConfig.video}
+          height="100%"
+          width="100%"
+          volume={this.state.volume}
+          playing={this.state.videoPlaying}
+          onProgress={this.stopIfPastEnd}
+          progressFrequency={PROGRESS_INTERVAL}
+          ref={(videoPlayer) => { this.videoPlayer = videoPlayer; }}
+        />
+      );
+    }
+  }
+
   renderBody() {
-    if (this.state.donePreparingClips) {
+    if (this.workingOnProject()) {
       return (
         <ClipList
-          clips={this.state.clips}
+          ref={(clipList) => { this.clipList = clipList; }}
           playVideo={this.playVideo}
-          recordAudio={this.recordAudio}
+          subtitleFile={this.state.projectConfig.subtitles}
         />
       );
     }
 
-    // Return the status message
-    return (
-      <p>{this.state.statusMessage}</p>
-    );
+    return (<ProjectSelector onProjectChosen={this.projectChosen}/>);
+  }
+
+  renderFooter() {
+    if (this.workingOnProject()) {
+      return (
+        <Button className={styles.exportButton} onClick={this.export}>
+          <b>EXPORT</b>
+        </Button>
+      );
+    }
   }
 
   render() {
@@ -148,27 +133,16 @@ export default class Home extends Component {
       <div>
         <div className={styles.container} data-tid="container">
 
-          <div className={styles.video}>
-            <ReactPlayer
-              url={INPUT_MOVIE}
-              height="100%"
-              width="100%"
-              volume={this.state.volume}
-              playing={this.state.videoPlaying}
-              onProgress={this.stopIfPastEnd}
-              progressFrequency={PROGRESS_INTERVAL}
-              ref={(videoPlayer) => { this.videoPlayer = videoPlayer; }}
-            />
+          <div className={styles.header}>
+            {this.renderHeader()}
           </div>
 
-          <div className={styles.clips}>
+          <div className={styles.body}>
             {this.renderBody()}
           </div>
 
           <div className={styles.footer}>
-            <Button className={styles.exportButton} onClick={this.export}>
-              <b>EXPORT</b>
-            </Button>
+            {this.renderFooter()}
           </div>
 
         </div>
