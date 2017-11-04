@@ -9,7 +9,10 @@ import styles from './Home.css';
 
 
 const PROGRESS_INTERVAL = 50;
-
+const PERCENT_MESSAGE = `
+FYI, if the first clip is in the middle of the video,
+the progress will stay at zero for a bit.
+`;
 
 export default class Home extends Component {
 
@@ -17,10 +20,9 @@ export default class Home extends Component {
     super(props);
 
     this.state = {
+      exporting: false,
+      exportProgress: 0,
       videoPlaying: false,
-
-      // Project configuration should look as follows
-      // projectConfig: { video: '/path/to/video', subtitles: '/path/to/subtitles' }
       projectConfig: null,
     };
 
@@ -29,6 +31,7 @@ export default class Home extends Component {
     this.stopVideo = this.stopVideo.bind(this);
     this.export = this.export.bind(this);
     this.projectChosen = this.projectChosen.bind(this);
+    this.updateExportProgress = this.updateExportProgress.bind(this);
   }
 
   componentDidMount() {
@@ -64,6 +67,17 @@ export default class Home extends Component {
     }
   }
 
+  updateExportProgress(progress) {
+    // Format the timestamp so that timeMs knows how to parse it
+    const current = u.timeMs(`${progress.timemark.replace('.', ',')}0`);
+
+    const start = u.timeMs(this.state.exportStartTime);
+    const end = u.timeMs(this.state.exportEndTime);
+    const percent = (current / (end - start)) * 100;
+
+    this.setState({ exportProgress: Math.round(Number(percent))});
+  }
+
   export() {
     const allClips = this.clipList.state.clips;
 
@@ -76,17 +90,25 @@ export default class Home extends Component {
     const clips = existingClips.map(i => allClips[i]);
 
     // Get the first and last clips
-    const firstClip = allClips[existingClips[0]];
-    const lastClip = allClips[existingClips[existingClips.length - 1]];
+    const exportStartTime = allClips[existingClips[0]].startTime;
+    const exportEndTime = allClips[existingClips[existingClips.length - 1]].endTime;
 
     // Add the clips to the video
-    console.log('Starting merge...');
+    this.setState({
+      exporting: true,
+      exportProgress: 0,
+      exportStartTime,
+      exportEndTime,
+    });
+
     u.mergeAudio(
+      this.state.projectConfig.video,
       clips,
-      firstClip.startTime,
-      lastClip.endTime,
-      'final.mp4'
-    ).then(() => { console.log('Done!'); });
+      exportStartTime,
+      exportEndTime,
+      'final.mp4',
+      this.updateExportProgress,
+    ).then(() => { this.setState({ exporting: false }); });
   }
 
   renderHeader() {
@@ -134,6 +156,23 @@ export default class Home extends Component {
   render() {
     return (
       <div>
+        {this.state.exporting &&
+          <div className={styles.exportOverlay}>
+            <div>
+              <p>Exporting your dank video...</p>
+              <br />
+              <p>{this.state.exportProgress}%</p>
+              <br />
+              <i className="fa fa-spinner fa-spin fa-2x" />
+              <br />
+              <br />
+              <p>
+                {PERCENT_MESSAGE}
+              </p>
+            </div>
+          </div>
+        }
+
         <div className={styles.container} data-tid="container">
 
           <div className={styles.header}>
