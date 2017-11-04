@@ -51,7 +51,7 @@ export default class Home extends Component {
 
     // Start the video and schedule its stop
     const volume = withSound ? 1.0 : 0;
-    this.setState({ videoPlaying: true, volume: volume, clipEnd: end });
+    this.setState({ videoPlaying: true, volume, clipEnd: end });
   }
 
   stopVideo() {
@@ -65,17 +65,19 @@ export default class Home extends Component {
   }
 
   export() {
+    const allClips = this.clipList.state.clips;
+
     // Ignore hidden files, extract sub index, and sort
-    let existingClips = fs.readdirSync(CLIP_DIRECTORY).filter(f => f[0] !== '.');
+    let existingClips = fs.readdirSync(this.clipList.clipDirectory).filter(f => f[0] !== '.');
     existingClips = existingClips.map(f => parseInt(f.replace('.webm', ''), 10));
     existingClips.sort((a, b) => a - b);
 
     // Get the corresponding subs
-    const clips = existingClips.map(i => this.clipList.state.clips[i]);
+    const clips = existingClips.map(i => allClips[i]);
 
     // Get the first and last clips
-    const firstClip = this.subtitles[existingClips[0]];
-    const lastClip = this.subtitles[existingClips[existingClips.length - 1]];
+    const firstClip = allClips[existingClips[0]];
+    const lastClip = allClips[existingClips[existingClips.length - 1]];
 
     // Add the clips to the video
     console.log('Starting merge...');
@@ -109,13 +111,14 @@ export default class Home extends Component {
       return (
         <ClipList
           ref={(clipList) => { this.clipList = clipList; }}
+          projectDirectory={this.state.projectConfig.projectDirectory}
           playVideo={this.playVideo}
           subtitleFile={this.state.projectConfig.subtitles}
         />
       );
     }
 
-    return (<ProjectSelector onProjectChosen={this.projectChosen}/>);
+    return (<ProjectSelector onProjectChosen={this.projectChosen} />);
   }
 
   renderFooter() {

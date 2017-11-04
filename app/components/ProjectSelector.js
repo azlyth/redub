@@ -8,7 +8,7 @@ import styles from './ProjectSelector.css';
 import * as u from '../utils';
 
 
-const ROOT_PROJECT_FOLDER = path.join(remote.app.getPath('appData'), 'redub', 'projects');
+const ROOT_PROJECT_FOLDER = path.join(remote.app.getPath('documents'), 'redub');
 const CONFIG_FILENAME = 'config.json';
 
 
@@ -34,7 +34,7 @@ export default class ProjectSelector extends Component {
       videoFile: null,
       subFile: null,
       newProjectName: '',
-      projectNameAlreadyExists: false,
+      nameAlreadyExists: false,
       existingProjects: [],
     };
   }
@@ -46,44 +46,43 @@ export default class ProjectSelector extends Component {
   }
 
   createNewProject() {
+    const projectDirectory = path.join(ROOT_PROJECT_FOLDER, this.state.newProjectName);
+
     const projectConfig = {
       video: this.state.videoFile.path,
       subtitles: this.state.subFile.path,
+      projectDirectory,
     };
 
     // Create the new project directory and save the configuration
-    const projectDirectory = path.join(ROOT_PROJECT_FOLDER, this.state.newProjectName);
     const configPath = path.join(projectDirectory, CONFIG_FILENAME);
     u.makeDirectory(projectDirectory);
-    fs.writeFileSync(configPath, JSON.stringify(projectConfig));
+    fs.writeFileSync(configPath, JSON.stringify(projectConfig), { encoding: 'utf8' });
 
     this.props.onProjectChosen(projectConfig);
   }
 
-  chooseExistingProject() {
-    const projectConfig = {
-      video: '/home/peter/projects/redub/input/movie.mkv',
-      subtitles: '/home/peter/projects/redub/input/subtitles.srt',
-    };
-
-    this.props.onProjectChosen(projectConfig);
+  chooseExistingProject(projectName) {
+    const configPath = path.join(ROOT_PROJECT_FOLDER, projectName, CONFIG_FILENAME);
+    const config = JSON.parse(fs.readFileSync(configPath, { encoding: 'utf8' }));
+    this.props.onProjectChosen(config);
   }
 
   changeProjectName(event) {
     const newProjectName = event.target.value;
 
     const potentialProjectPath = path.join(ROOT_PROJECT_FOLDER, newProjectName);
-    const projectNameAlreadyExists = newProjectName.length > 0 && u.fileExists(potentialProjectPath);
+    const nameAlreadyExists = newProjectName.length > 0 && u.fileExists(potentialProjectPath);
 
     this.setState({
       newProjectName,
-      projectNameAlreadyExists,
+      nameAlreadyExists,
     });
   }
 
   canCreateNewProject() {
     const nameChosen = this.state.newProjectName.length > 0;
-    const nameValid = !this.state.projectNameAlreadyExists;
+    const nameValid = !this.state.nameAlreadyExists;
     const videoChosen = this.state.videoFile !== null;
     const subsChosen = this.state.subFile !== null;
 
@@ -109,7 +108,7 @@ export default class ProjectSelector extends Component {
                 <ListGroupItem
                   key={index}
                   className={styles.project}
-                  onClick={this.chooseExistingProject}
+                  onClick={() => { this.chooseExistingProject(project) }}
                 >
                   {project}
                 </ListGroupItem>
@@ -144,7 +143,7 @@ export default class ProjectSelector extends Component {
             value={this.state.newProjectName}
             onChange={this.changeProjectName}
           />
-          {this.state.projectNameAlreadyExists &&
+          {this.state.nameAlreadyExists &&
             <p className={styles.error}>
               A project with that name already exists!
             </p>

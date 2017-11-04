@@ -101,7 +101,7 @@ export default class Clip extends Component {
       // HACK: Basically, the browser will cache the audio clip unless the 'Cache-Control'
       // header is set to 'no-cache'. So in order to get around that, set the querystring of the
       // URL to force the browser to re-download the audio clip.
-      const audioSource = '../'.concat(this.props.dubFile, '?', this.state.renderAudioCounter);
+      const audioSource = this.props.dubFile.concat('?', this.state.renderAudioCounter);
 
       return (
         <audio

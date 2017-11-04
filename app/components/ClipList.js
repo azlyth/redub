@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import subParser from 'subtitles-parser';
@@ -12,13 +13,19 @@ const CLIP_DIRECTORY = 'recorded-clips';
 export default class ClipList extends Component {
 
   static propTypes = {
+    projectDirectory: PropTypes.string.isRequired,
     playVideo: PropTypes.func.isRequired,
     subtitleFile: PropTypes.string.isRequired,
   };
 
   constructor(props) {
     super(props);
+
+    this.clipDirectory = path.join(this.props.projectDirectory, CLIP_DIRECTORY);
+    u.makeDirectory(this.clipDirectory);
+
     this.recordAudio = this.recordAudio.bind(this);
+
     this.state = { clips: [] };
   }
 
@@ -38,7 +45,7 @@ export default class ClipList extends Component {
     const clipPromises = this.subtitles.map((sub, i) => {
       return new Promise((resolve) => {
         const duration = u.msTime(u.timeMs(sub.endTime) - u.timeMs(sub.startTime));
-        const dubFile = CLIP_DIRECTORY.concat('/', i, '.webm');
+        const dubFile = path.join(this.clipDirectory, i.toString().concat('.webm'));
         resolve({ ...sub, dubFile, duration });
       });
     });
