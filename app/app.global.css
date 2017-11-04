@@ -4,5 +4,11 @@
   color: white;
   background-color: #172232;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
-  font-size: 24px;
+  font-size: 20px;
+}
+
+[type=text] {
+  color: black;
+  border-radius: 5px;
+  padding: 5px 10px;
 }

@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import { remote } from 'electron';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -6,7 +8,7 @@ import styles from './ProjectSelector.css';
 import * as u from '../utils';
 
 
-const PROJECT_FOLDER = remote.app.getPath('userData').concat('/projects');
+const PROJECT_FOLDER = path.join(remote.app.getPath('appData'), 'redub', 'projects');
 
 
 export default class ProjectSelector extends Component {
@@ -18,28 +20,36 @@ export default class ProjectSelector extends Component {
   constructor(props) {
     super(props);
 
-    //this.createProjectDirectory();
+    u.makeDirectory(PROJECT_FOLDER);
+    this.getExistingProjects();
 
     this.createNewProject = this.createNewProject.bind(this);
     this.chooseExistingProject = this.chooseExistingProject.bind(this);
+    this.changeProjectName = this.changeProjectName.bind(this);
+    this.videoFileChanged = this.videoFileChanged.bind(this);
+    this.subFileChanged = this.subFileChanged.bind(this);
 
     this.state = {
-      existingProjects: [
-        'First',
-        'Second',
-        'Third',
-      ],
+      videoFile: null,
+      subFile: null,
+      newProjectName: '',
+      existingProjects: [],
     };
   }
 
-  createProjectDirectory() {
-    if (!u.fileExists(PROJECT_FOLDER)) {
-      u.makeDirectory(PROJECT_FOLDER);
-    }
+  getExistingProjects() {
+    fs.readdir(PROJECT_FOLDER, (err, files) => {
+      this.setState({ existingProjects: files });
+    });
   }
 
   createNewProject() {
-    alert(PROJECT_FOLDER);
+    const projectConfig = {
+      video: this.state.videoFile.path,
+      subtitles: this.state.subFile.path,
+    };
+
+    this.props.onProjectChosen(projectConfig);
   }
 
   chooseExistingProject() {
@@ -51,10 +61,30 @@ export default class ProjectSelector extends Component {
     this.props.onProjectChosen(projectConfig);
   }
 
+  changeProjectName(event) {
+    this.setState({ newProjectName: event.target.value });
+  }
+
+  canCreateNewProject() {
+    const nameExists = this.state.newProjectName.length > 0;
+    const videoChosen = this.state.videoFile !== null;
+    const subsChosen = this.state.subFile !== null;
+
+    return nameExists && videoChosen && subsChosen;
+  }
+
+  videoFileChanged() {
+    this.setState({ videoFile: this.videoInput.files[0] });
+  }
+
+  subFileChanged() {
+    this.setState({ subFile: this.subInput.files[0] });
+  }
+
   renderProjects() {
     return (
       <div>
-        <h2>Choose existing project:</h2>
+        <h3>Choose existing project:</h3>
         <div className={styles.projectListContainer}>
           <ListGroup className={styles.projectList}>
             {this.state.existingProjects.map((project, index) => {
@@ -77,17 +107,72 @@ export default class ProjectSelector extends Component {
   render() {
     return (
       <div className={styles.projectSelector}>
-        {this.renderProjects()}
+        {(this.state.existingProjects.length > 0) &&
+          <span>
+            {this.renderProjects()}
+            <br />
+            <div>
+              <h2>OR</h2>
+            </div>
+          </span>
+        }
 
         <br />
 
         <div>
-          <h2>OR</h2>
+          <input
+            type="text"
+            placeholder="Enter your new project name..."
+            className={styles.newProjectName}
+            value={this.state.newProjectName}
+            onChange={this.changeProjectName}
+          />
         </div>
 
         <br />
 
-        <Button bsSize="large" onClick={this.createNewProject}>
+        <div>
+          <span>
+            <Button
+              bsSize="large"
+              className={styles.fileInputButton}
+              onClick={() => { this.videoInput.click(); }}
+            >
+              {(this.state.videoFile && this.state.videoFile.name) || 'Choose video...'}
+            </Button>
+            <input
+              type="file"
+              className={styles.fileInput}
+              onChange={this.videoFileChanged}
+              ref={(e) => { this.videoInput = e; }}
+            />
+          </span>
+          &nbsp;&nbsp;&nbsp;
+          <span>
+            <Button
+              bsSize="large"
+              className={styles.fileInputButton}
+              onClick={() => { this.subInput.click(); }}
+            >
+              {(this.state.subFile && this.state.subFile.name) || 'Choose subtitles...'}
+            </Button>
+            <input
+              type="file"
+              className={styles.fileInput}
+              onChange={this.subFileChanged}
+              ref={(e) => { this.subInput = e; }}
+            />
+          </span>
+        </div>
+
+        <br />
+
+        <Button
+          bsSize="large"
+          bsStyle="success"
+          disabled={!this.canCreateNewProject()}
+          onClick={this.createNewProject}
+        >
           <b>CREATE NEW PROJECT</b>
         </Button>
       </div>

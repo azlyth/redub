@@ -1,5 +1,17 @@
+.projectSelector {
+  margin-bottom: 30px;
+}
+
+.fileInputButton {
+  width: 40vw;
+}
+
+.fileInput {
+  display: none !important;
+}
+
 .projectListContainer {
-  width: 50%;
+  width: 84vw;
   margin: 0 auto;
 }
 
@@ -9,4 +21,8 @@
 
 .project {
   color: black;
+}
+
+.newProjectName {
+  width: 84vw;
 }

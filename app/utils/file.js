@@ -2,22 +2,22 @@ import fs from 'fs';
 import path from 'path';
 
 
-function deleteFile(path) {
-  return fs.unlinkSync(path);
+function deleteFile(filename) {
+  return fs.unlinkSync(filename);
 }
 
-function fileExists(path) {
-  return fs.existsSync(path);
+function fileExists(filename) {
+  return fs.existsSync(filename);
 }
 
-function makeDirectory(path) {
+function makeDirectory(dirPath) {
   // Simulate `mkdir -p`
   try {
-    fs.mkdirSync(path);
+    fs.mkdirSync(dirPath);
   } catch(e) {
-    if (e.errno === 34) {
-      makeDirectory(path.dirname(path));
-      makeDirectory(path);
+    if (e.code === 'ENOENT') {
+      makeDirectory(path.dirname(dirPath));
+      makeDirectory(dirPath);
     }
   }
 }
