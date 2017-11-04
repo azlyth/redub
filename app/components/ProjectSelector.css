@@ -26,3 +26,9 @@
 .newProjectName {
   width: 84vw;
 }
+
+.error {
+  font-size: 1.8rem;
+  margin-top: 5px;
+  color: red;
+}

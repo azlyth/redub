@@ -1,5 +1,10 @@
 @import "~font-awesome/css/font-awesome.css";
 
+p {
+  margin: 0;
+  padding: 0;
+}
+
 #root {
   color: white;
   background-color: #172232;
