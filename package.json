@@ -195,6 +195,7 @@
     "prop-types": "^15.6.0",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.5",
+    "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^15.6.1",
     "react-hot-loader": "3.0.0-beta.6",
     "react-player": "^0.25.3",

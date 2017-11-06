@@ -1,3 +1,7 @@
+.clipContainer {
+  margin-top: 20px;
+}
+
 .dialogue {
   font-size: 2rem;
   margin-bottom: 10px;
@@ -8,4 +12,5 @@
 .button {
   font-size: 13px;
   min-width: 80px;
+  margin-bottom: 23px;
 }

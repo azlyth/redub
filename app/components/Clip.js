@@ -124,9 +124,8 @@ export default class Clip extends Component {
 
   render() {
     return (
-      <div>
+      <div className={styles.clipContainer}>
         <div>
-
 
         { this.renderDialogue() }
 

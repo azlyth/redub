@@ -2,6 +2,7 @@ import fs from 'fs';
 import React, { Component } from 'react';
 import ReactPlayer from 'react-player';
 import { Button } from 'react-bootstrap';
+import { Scrollbars } from 'react-custom-scrollbars';
 import ClipList from './ClipList';
 import ProjectSelector from './ProjectSelector';
 import * as u from '../utils';
@@ -187,7 +188,9 @@ export default class Home extends Component {
           </div>
 
           <div className={styles.body}>
-            {this.renderBody()}
+            <Scrollbars>
+              {this.renderBody()}
+            </Scrollbars>
           </div>
 
           <div className={styles.footer}>
