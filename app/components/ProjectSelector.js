@@ -3,6 +3,7 @@ import path from 'path';
 import { remote } from 'electron';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { Button, ListGroup, ListGroupItem } from 'react-bootstrap';
 import * as u from '../utils';
 import FileInput from './FileInput';
@@ -79,13 +80,30 @@ export default class ProjectSelector extends Component {
     });
   }
 
+  nameChosen() {
+    return this.state.newProjectName.length > 0;
+  }
+
+  nameValid() {
+    return !this.state.nameAlreadyExists;
+  }
+
   canCreateNewProject() {
-    const nameChosen = this.state.newProjectName.length > 0;
-    const nameValid = !this.state.nameAlreadyExists;
     const videoChosen = this.state.videoFile !== null;
     const subsChosen = this.state.subFile !== null;
 
-    return nameChosen && nameValid && videoChosen && subsChosen;
+    return this.nameChosen() && this.nameValid() && videoChosen && subsChosen;
+  }
+
+  nameClasses() {
+    const classes = [styles.newProjectName];
+
+    if (this.nameChosen()) {
+      const otherClass = this.nameValid() ? styles.validName : styles.invalidName;
+      classes.push(otherClass);
+    }
+
+    return classNames(classes);
   }
 
   renderProjects() {
@@ -129,13 +147,13 @@ export default class ProjectSelector extends Component {
         <div>
           <input
             type="text"
-            placeholder="Enter your new project name..."
-            className={styles.newProjectName}
+            placeholder="Enter a new project name..."
+            className={this.nameClasses()}
             value={this.state.newProjectName}
             onChange={this.changeProjectName}
           />
           {this.state.nameAlreadyExists &&
-            <p className={styles.error}>
+            <p className={styles.errorText}>
               A project with that name already exists!
             </p>
           }

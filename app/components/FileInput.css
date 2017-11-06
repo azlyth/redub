@@ -2,10 +2,18 @@
   display: none !important;
 }
 
+.button,
+.button:hover,
+.button:active,
+.button:focus {
+  padding: 5px 11px;
+  border: 5px solid transparent;
+}
+
 .fileChosen, .fileChosen:focus {
-  border: 5px solid #5cb85c;
+  border-color: #5cb85c;
 }
 
 .fileChosen:hover {
-  border: 5px solid #449d44;
+  border-color: #449d44;
 }

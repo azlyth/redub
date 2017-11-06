@@ -19,12 +19,30 @@
   color: black;
 }
 
-.newProjectName {
-  width: 84vw;
-}
-
-.error {
+.errorText {
   font-size: 1.8rem;
   margin-top: 5px;
   color: red;
+}
+
+.newProjectName {
+  width: 84vw;
+  padding: 2px 6px;
+  border: 5px solid transparent;
+}
+
+.validName, .validName:focus {
+  border-color: #5cb85c;
+}
+
+.validName:hover {
+  border-color: #449d44;
+}
+
+.invalidName, .invalidName:focus {
+  border-color: #d9534f;
+}
+
+.invalidName:hover {
+  border-color: #c9302c;
 }

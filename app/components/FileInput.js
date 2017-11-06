@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { Button } from 'react-bootstrap';
 import styles from './FileInput.css';
 
@@ -26,14 +27,14 @@ export default class FileInput extends Component {
   }
 
   buttonClasses() {
-    const buttonClasses = [this.props.className];
+    const buttonClasses = [this.props.className, styles.button];
 
     // Add the fileChosen class if a file was chosen
     if (this.state.file !== undefined) {
       buttonClasses.push(styles.fileChosen);
     }
 
-    return buttonClasses;
+    return classNames(buttonClasses);
   }
 
   fileChanged() {

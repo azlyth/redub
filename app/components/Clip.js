@@ -53,7 +53,6 @@ export default class Clip extends Component {
   }
 
   handleRemoveDub() {
-    console.log(u);
     u.deleteFile(this.props.dubFile);
     this.setState({ recorded: false });
   }
