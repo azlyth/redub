@@ -86,6 +86,12 @@ export default class Home extends Component {
     existingClips = existingClips.map(f => parseInt(f.replace('.webm', ''), 10));
     existingClips.sort((a, b) => a - b);
 
+    // Return if there are no clips to export
+    if (existingClips.length === 0) {
+      alert('You haven\'t dubbed anything yet!');
+      return;
+    }
+
     // Get the actual clip that corresponds to each index
     const clips = existingClips.map(i => allClips[i]);
 
