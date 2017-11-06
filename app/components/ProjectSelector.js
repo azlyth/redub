@@ -4,8 +4,9 @@ import { remote } from 'electron';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Button, ListGroup, ListGroupItem } from 'react-bootstrap';
-import styles from './ProjectSelector.css';
 import * as u from '../utils';
+import FileInput from './FileInput';
+import styles from './ProjectSelector.css';
 
 
 const ROOT_PROJECT_FOLDER = path.join(remote.app.getPath('documents'), 'redub');
@@ -24,19 +25,17 @@ export default class ProjectSelector extends Component {
     u.makeDirectory(ROOT_PROJECT_FOLDER);
     this.getExistingProjects();
 
-    this.createNewProject = this.createNewProject.bind(this);
-    this.chooseExistingProject = this.chooseExistingProject.bind(this);
-    this.changeProjectName = this.changeProjectName.bind(this);
-    this.videoFileChanged = this.videoFileChanged.bind(this);
-    this.subFileChanged = this.subFileChanged.bind(this);
-
     this.state = {
-      videoFile: null,
-      subFile: null,
       newProjectName: '',
       nameAlreadyExists: false,
       existingProjects: [],
+      videoFile: null,
+      subFile: null,
     };
+
+    this.createNewProject = this.createNewProject.bind(this);
+    this.chooseExistingProject = this.chooseExistingProject.bind(this);
+    this.changeProjectName = this.changeProjectName.bind(this);
   }
 
   getExistingProjects() {
@@ -89,14 +88,6 @@ export default class ProjectSelector extends Component {
     return nameChosen && nameValid && videoChosen && subsChosen;
   }
 
-  videoFileChanged() {
-    this.setState({ videoFile: this.videoInput.files[0] });
-  }
-
-  subFileChanged() {
-    this.setState({ subFile: this.subInput.files[0] });
-  }
-
   renderProjects() {
     return (
       <div>
@@ -108,7 +99,7 @@ export default class ProjectSelector extends Component {
                 <ListGroupItem
                   key={index}
                   className={styles.project}
-                  onClick={() => { this.chooseExistingProject(project) }}
+                  onClick={() => { this.chooseExistingProject(project); }}
                 >
                   {project}
                 </ListGroupItem>
@@ -153,37 +144,17 @@ export default class ProjectSelector extends Component {
         <br />
 
         <div>
-          <span>
-            <Button
-              bsSize="large"
-              className={styles.fileInputButton}
-              onClick={() => { this.videoInput.click(); }}
-            >
-              {(this.state.videoFile && this.state.videoFile.name) || 'Choose video...'}
-            </Button>
-            <input
-              type="file"
-              className={styles.fileInput}
-              onChange={this.videoFileChanged}
-              ref={(e) => { this.videoInput = e; }}
-            />
-          </span>
+          <FileInput
+            className={styles.fileInput}
+            placeholder="Choose video..."
+            onChange={(videoFile) => { this.setState({ videoFile }); }}
+          />
           &nbsp;&nbsp;&nbsp;
-          <span>
-            <Button
-              bsSize="large"
-              className={styles.fileInputButton}
-              onClick={() => { this.subInput.click(); }}
-            >
-              {(this.state.subFile && this.state.subFile.name) || 'Choose subtitles...'}
-            </Button>
-            <input
-              type="file"
-              className={styles.fileInput}
-              onChange={this.subFileChanged}
-              ref={(e) => { this.subInput = e; }}
-            />
-          </span>
+          <FileInput
+            className={styles.fileInput}
+            placeholder="Choose subtitles..."
+            onChange={(subFile) => { this.setState({ subFile }); }}
+          />
         </div>
 
         <br />

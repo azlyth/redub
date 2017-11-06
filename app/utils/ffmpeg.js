@@ -17,7 +17,7 @@ function setupFFBinaries() {
     makeDirectory(BINARY_DIRECTORY);
 
     // Download the binaries if necessary
-    if (fileExists(ffmpegPath) && fileExists(ffprobePath)) {
+    if (fileExists(FFMPEG_PATH) && fileExists(FFPROBE_PATH)) {
       resolve();
     } else {
       ffbinaries.downloadFiles(

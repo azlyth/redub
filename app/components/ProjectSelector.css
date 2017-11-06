@@ -2,12 +2,8 @@
   margin-bottom: 30px;
 }
 
-.fileInputButton {
-  width: 40vw;
-}
-
 .fileInput {
-  display: none !important;
+  width: 40vw;
 }
 
 .projectListContainer {
