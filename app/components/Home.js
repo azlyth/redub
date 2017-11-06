@@ -81,19 +81,19 @@ export default class Home extends Component {
   export() {
     const allClips = this.clipList.state.clips;
 
-    // Ignore hidden files, extract sub index, and sort
+    // Find the indices of the clips that were dubbed
     let existingClips = fs.readdirSync(this.clipList.clipDirectory).filter(f => f[0] !== '.');
     existingClips = existingClips.map(f => parseInt(f.replace('.webm', ''), 10));
     existingClips.sort((a, b) => a - b);
 
-    // Get the corresponding subs
+    // Get the actual clip that corresponds to each index
     const clips = existingClips.map(i => allClips[i]);
 
     // Get the first and last clips
     const exportStartTime = allClips[existingClips[0]].startTime;
     const exportEndTime = allClips[existingClips[existingClips.length - 1]].endTime;
 
-    // Add the clips to the video
+    // Store the export info in our state
     this.setState({
       exporting: true,
       exportProgress: 0,
@@ -101,6 +101,7 @@ export default class Home extends Component {
       exportEndTime,
     });
 
+    // Add the clips to the video
     u.mergeAudio(
       this.state.projectConfig.video,
       clips,

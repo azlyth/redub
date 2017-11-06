@@ -2,3 +2,10 @@
   display: none !important;
 }
 
+.fileChosen, .fileChosen:focus {
+  border: 5px solid #5cb85c;
+}
+
+.fileChosen:hover {
+  border: 5px solid #449d44;
+}

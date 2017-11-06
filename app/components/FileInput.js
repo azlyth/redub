@@ -10,36 +10,57 @@ export default class FileInput extends Component {
     onChange: PropTypes.func.isRequired,
     placeholder: PropTypes.string,
     className: PropTypes.string,
+    forOutput: PropTypes.bool,
   };
 
   static defaultProps = {
     placeholder: 'Choose file...',
     className: null,
+    forOutput: false,
   };
 
   constructor(props) {
     super(props);
-    this.state = { file: null };
+    this.state = { file: undefined };
     this.fileChanged = this.fileChanged.bind(this);
+  }
+
+  buttonClasses() {
+    const buttonClasses = [this.props.className];
+
+    // Add the fileChosen class if a file was chosen
+    if (this.state.file !== undefined) {
+      buttonClasses.push(styles.fileChosen);
+    }
+
+    return buttonClasses;
   }
 
   fileChanged() {
     const file = this.fileInput.files[0];
-    this.setState({ file });
     this.props.onChange(file);
+
+    // If this component is being used to choose a file for output, clear the
+    // file input. If we don't, choosing the same file again will result in
+    // no change (which is incorrect).
+    if (this.props.forOutput) {
+      this.fileInput.value = null;
+    } else {
+      this.setState({ file });
+    }
   }
 
   render() {
-    const buttonText = this.state.file === null ? this.props.placeholder : this.state.file.name;
+    const buttonText = this.state.file === undefined ? this.props.placeholder : this.state.file.name;
 
     return (
       <span>
         <Button
           bsSize="large"
-          className={this.props.className}
+          className={this.buttonClasses()}
           onClick={() => { this.fileInput.click(); }}
         >
-          {buttonText}
+          { buttonText }
         </Button>
         <input
           type="file"
