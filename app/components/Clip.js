@@ -78,15 +78,25 @@ export default class Clip extends Component {
     );
   }
 
-  renderPlayDubButton() {
+  renderDubButtons() {
     if (this.state.recorded) {
       return (
         <span>
-          <Button bsSize="small" bsStyle="success" onClick={this.handlePlayDub}>
+          <Button
+            className={styles.button}
+            bsSize="small"
+            bsStyle="success"
+            onClick={this.handlePlayDub}
+          >
             <b>PLAY DUB</b>
           </Button>
           &nbsp;&nbsp;
-          <Button bsSize="small" bsStyle="warning" onClick={this.handleRemoveDub}>
+          <Button
+            className={styles.button}
+            bsSize="small"
+            bsStyle="warning"
+            onClick={this.handleRemoveDub}
+          >
             <b>REMOVE DUB</b>
           </Button>
           &nbsp;&nbsp;
@@ -120,16 +130,26 @@ export default class Clip extends Component {
 
         { this.renderDialogue() }
 
-          <Button bsSize="small" bsStyle="success" onClick={this.handlePlay}>
-            <b>PLAY</b>
-          </Button>
-          &nbsp;&nbsp;
+        <Button
+          className={styles.button}
+          bsSize="small"
+          bsStyle="success"
+          onClick={this.handlePlay}
+        >
+          <b>PLAY</b>
+        </Button>
+        &nbsp;&nbsp;
 
-          { this.renderPlayDubButton() }
+        { this.renderDubButtons() }
 
-          <Button bsSize="small" bsStyle="danger" onClick={this.handleRecord}>
-            <b>RECORD</b>
-          </Button>
+        <Button
+          className={styles.button}
+          bsSize="small"
+          bsStyle="danger"
+          onClick={this.handleRecord}
+        >
+          <b>RECORD</b>
+        </Button>
 
         </div>
 

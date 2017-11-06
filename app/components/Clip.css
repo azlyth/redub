@@ -4,3 +4,8 @@
   margin-left: 10px;
   margin-right: 10px;
 }
+
+.button {
+  font-size: 13px;
+  min-width: 80px;
+}
