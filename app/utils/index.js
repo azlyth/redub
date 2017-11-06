@@ -1,5 +1,5 @@
 import {
-  getFFMPEG,
+  setupFFBinaries,
   mergeAudio
 } from './ffmpeg';
 
@@ -19,7 +19,7 @@ import {
 export default {
   deleteFile,
   fileExists,
-  getFFMPEG,
+  setupFFBinaries,
   makeDirectory,
   mergeAudio,
   msTime,

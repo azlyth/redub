@@ -7,20 +7,14 @@ import { fileExists, makeDirectory } from './file';
 
 
 const BINARY_DIRECTORY = path.join(remote.app.getPath('appData'), 'redub', 'binaries');
+const FFMPEG_PATH = path.join(BINARY_DIRECTORY, 'ffmpeg');
+const FFPROBE_PATH = path.join(BINARY_DIRECTORY, 'ffprobe');
 
 
 function setupFFBinaries() {
   return new Promise((resolve, reject) => {
     // Create the binary directory
     makeDirectory(BINARY_DIRECTORY);
-
-    // Set the location of the binaries (ffbinaries expects them in the environment)
-    const ffmpegPath = path.join(BINARY_DIRECTORY, 'wrong-ffmpeg');
-    const ffprobePath = path.join(BINARY_DIRECTORY, 'wrong-ffprobe');
-    process.env.FFMPEG_PATH = ffmpegPath;
-    process.env.FFPROBE_PATH = ffprobePath;
-    remote.process.env.FFMPEG_PATH = ffmpegPath;
-    remote.process.env.FFPROBE_PATH = ffprobePath;
 
     // Download the binaries if necessary
     if (fileExists(ffmpegPath) && fileExists(ffprobePath)) {
@@ -38,7 +32,11 @@ function setupFFBinaries() {
 function mergeAudio(inputMovie, clipList, start, end, outputFile, progressCallback) {
   return new Promise((resolve, reject) => {
     // Initialize the new command
-    let command = ffmpeg().addInput(inputMovie).on('progress', progressCallback);
+    let command = ffmpeg()
+      .setFfmpegPath(FFMPEG_PATH)
+      .setFfprobePath(FFPROBE_PATH)
+      .addInput(inputMovie)
+      .on('progress', progressCallback);
 
     // Add the video file and clips as inputs
     command = clipList.reduce(
@@ -81,6 +79,6 @@ function mergeAudio(inputMovie, clipList, start, end, outputFile, progressCallba
 }
 
 export default {
-  getFFMPEG,
+  setupFFBinaries,
   mergeAudio,
 };

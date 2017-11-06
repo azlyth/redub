@@ -35,7 +35,7 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    u.getFFMPEG();
+    u.setupFFBinaries();
   }
 
   projectChosen(projectConfig) {
