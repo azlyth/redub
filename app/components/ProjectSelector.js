@@ -164,13 +164,14 @@ export default class ProjectSelector extends Component {
         <div>
           <FileInput
             className={styles.fileInput}
-            placeholder="Choose video..."
+            placeholder="Choose video"
             onChange={(videoFile) => { this.setState({ videoFile }); }}
           />
           &nbsp;&nbsp;&nbsp;
           <FileInput
+            accept=".srt"
             className={styles.fileInput}
-            placeholder="Choose subtitles..."
+            placeholder="Choose subtitles (srt)"
             onChange={(subFile) => { this.setState({ subFile }); }}
           />
         </div>

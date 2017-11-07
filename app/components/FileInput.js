@@ -12,12 +12,14 @@ export default class FileInput extends Component {
     placeholder: PropTypes.string,
     className: PropTypes.string,
     forOutput: PropTypes.bool,
+    accept: PropTypes.string,
   };
 
   static defaultProps = {
     placeholder: 'Choose file...',
     className: null,
     forOutput: false,
+    accept: null,
   };
 
   constructor(props) {
@@ -65,6 +67,7 @@ export default class FileInput extends Component {
         </Button>
         <input
           type="file"
+          accept={this.props.accept}
           className={styles.fileInput}
           onChange={this.fileChanged}
           ref={(e) => { this.fileInput = e; }}
