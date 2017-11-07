@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs-extra';
 import path from 'path';
 import { remote } from 'electron';
 import React, { Component } from 'react';
@@ -12,6 +12,10 @@ import styles from './ProjectSelector.css';
 
 const ROOT_PROJECT_FOLDER = path.join(remote.app.getPath('documents'), 'redub');
 const CONFIG_FILENAME = 'config.json';
+
+function projectPath(name) {
+  return path.join(ROOT_PROJECT_FOLDER, name);
+}
 
 
 export default class ProjectSelector extends Component {
@@ -46,7 +50,7 @@ export default class ProjectSelector extends Component {
   }
 
   createNewProject() {
-    const projectDirectory = path.join(ROOT_PROJECT_FOLDER, this.state.newProjectName);
+    const projectDirectory = projectPath(this.state.newProjectName);
 
     const projectConfig = {
       video: this.state.videoFile.path,
@@ -63,7 +67,7 @@ export default class ProjectSelector extends Component {
   }
 
   chooseExistingProject(projectName) {
-    const configPath = path.join(ROOT_PROJECT_FOLDER, projectName, CONFIG_FILENAME);
+    const configPath = path.join(projectPath(projectName), CONFIG_FILENAME);
     const config = JSON.parse(fs.readFileSync(configPath, { encoding: 'utf8' }));
     this.props.onProjectChosen(config);
   }
@@ -71,7 +75,7 @@ export default class ProjectSelector extends Component {
   changeProjectName(event) {
     const newProjectName = event.target.value;
 
-    const potentialProjectPath = path.join(ROOT_PROJECT_FOLDER, newProjectName);
+    const potentialProjectPath = projectPath(newProjectName);
     const nameAlreadyExists = newProjectName.length > 0 && u.fileExists(potentialProjectPath);
 
     this.setState({
@@ -106,6 +110,16 @@ export default class ProjectSelector extends Component {
     return classNames(classes);
   }
 
+  deleteProject(event, projectName) {
+    // The project will be selected if you don't prevent the other click event
+    event.stopPropagation();
+
+    if (confirm(`Are you sure you want to delete "${projectName}"?`)) {
+      fs.removeSync(projectPath(projectName));
+      this.getExistingProjects();
+    }
+  }
+
   renderProjects() {
     return (
       <div>
@@ -120,6 +134,9 @@ export default class ProjectSelector extends Component {
                   onClick={() => { this.chooseExistingProject(project); }}
                 >
                   {project}
+                  <span onClick={(event) => { this.deleteProject(event, project); }}>
+                    <i className={classNames(['fa', 'fa-times', styles.deleteProject])} />
+                  </span>
                 </ListGroupItem>
               );
             })}

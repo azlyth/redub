@@ -191,6 +191,7 @@
     "ffbinaries": "azlyth/ffbinaries-node#9ee6a70",
     "fluent-ffmpeg": "^2.1.2",
     "font-awesome": "^4.7.0",
+    "fs-extra": "^4.0.2",
     "history": "^4.6.3",
     "prop-types": "^15.6.0",
     "react": "^15.6.1",

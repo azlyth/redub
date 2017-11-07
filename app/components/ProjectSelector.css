@@ -46,3 +46,8 @@
 .invalidName:hover {
   border-color: #c9302c;
 }
+
+.deleteProject {
+  float: right;
+  color: #d9534f;
+}
