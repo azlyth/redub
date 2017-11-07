@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import ReactPlayer from 'react-player';
 import { Button } from 'react-bootstrap';
 import { Scrollbars } from 'react-custom-scrollbars';
+import FileInput from './FileInput';
 import ClipList from './ClipList';
 import ProjectSelector from './ProjectSelector';
 import * as u from '../utils';
@@ -79,7 +80,7 @@ export default class Home extends Component {
     this.setState({ exportProgress: Math.round(Number(percent))});
   }
 
-  export() {
+  export(outputPath) {
     const allClips = this.clipList.state.clips;
 
     // Find the indices of the clips that were dubbed
@@ -114,7 +115,7 @@ export default class Home extends Component {
       clips,
       exportStartTime,
       exportEndTime,
-      'final.mp4',
+      outputPath,
       this.updateExportProgress,
     ).then(() => { this.setState({ exporting: false }); });
   }
@@ -154,9 +155,12 @@ export default class Home extends Component {
   renderFooter() {
     if (this.workingOnProject()) {
       return (
-        <Button className={styles.exportButton} onClick={this.export}>
-          <b>EXPORT</b>
-        </Button>
+        <FileInput
+          className={styles.exportButton}
+          placeholder="EXPORT"
+          onChange={(outputFile) => { this.export(outputFile.path); }}
+          forOutput
+        />
       );
     }
   }
