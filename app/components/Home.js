@@ -1,15 +1,17 @@
 import fs from 'fs';
+import path from 'path';
 import React, { Component } from 'react';
+import { remote } from 'electron';
 import ReactPlayer from 'react-player';
 import { Button } from 'react-bootstrap';
 import { Scrollbars } from 'react-custom-scrollbars';
-import FileInput from './FileInput';
 import ClipList from './ClipList';
 import ProjectSelector from './ProjectSelector';
 import * as u from '../utils';
 import styles from './Home.css';
 
 
+const DEFAULT_OUTPUT_PATH = path.join(remote.app.getPath('desktop'), 'masterpiece.mp4');
 const PROGRESS_INTERVAL = 50;
 const PERCENT_MESSAGE = `
 FYI, if the first clip is in the middle of the video,
@@ -80,7 +82,7 @@ export default class Home extends Component {
     this.setState({ exportProgress: Math.round(Number(percent))});
   }
 
-  export(outputPath) {
+  export() {
     const allClips = this.clipList.state.clips;
 
     // Find the indices of the clips that were dubbed
@@ -108,6 +110,9 @@ export default class Home extends Component {
       exportStartTime,
       exportEndTime,
     });
+
+    // Have the user choose where to output the video
+    const outputPath = remote.dialog.showSaveDialog({ defaultPath: DEFAULT_OUTPUT_PATH });
 
     // Add the clips to the video
     u.mergeAudio(
@@ -155,12 +160,12 @@ export default class Home extends Component {
   renderFooter() {
     if (this.workingOnProject()) {
       return (
-        <FileInput
+        <Button
           className={styles.exportButton}
-          placeholder="EXPORT"
-          onChange={(outputFile) => { this.export(outputFile.path); }}
-          forOutput
-        />
+          onClick={this.export}
+        >
+          EXPORT
+        </Button>
       );
     }
   }
