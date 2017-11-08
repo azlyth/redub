@@ -133,10 +133,16 @@ export default class ProjectSelector extends Component {
                   className={styles.project}
                   onClick={() => { this.chooseExistingProject(project); }}
                 >
-                  {project}
-                  <span onClick={(event) => { this.deleteProject(event, project); }}>
-                    <i className={classNames(['fa', 'fa-times', styles.deleteProject])} />
+                  <span>
+                    {project}
                   </span>
+                  <Button
+                    className={styles.deleteProject}
+                    bsStyle="danger"
+                    onClick={(event) => { this.deleteProject(event, project); }}
+                  >
+                    <i className={classNames(['fa', 'fa-times'])} />
+                  </Button>
                 </ListGroupItem>
               );
             })}

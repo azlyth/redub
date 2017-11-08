@@ -16,7 +16,10 @@
 }
 
 .project {
-  color: black;
+  color: black !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .errorText {
@@ -48,6 +51,5 @@
 }
 
 .deleteProject {
-  float: right;
-  color: #d9534f;
+  color: white;
 }
