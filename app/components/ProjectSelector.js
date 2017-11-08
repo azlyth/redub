@@ -49,9 +49,30 @@ export default class ProjectSelector extends Component {
     });
   }
 
+  validateConfig(config) {
+    // Make sure the video exists
+    if (!u.fileExists(config.video)) {
+      alert(`The video (${config.video}) seems to be missing.`);
+      return false;
+    }
+
+    // Make sure the subtitles exist
+    if (!u.fileExists(config.subtitles)) {
+      alert(`The subtitles (${config.subtitles}) seem to be missing.`);
+      return false;
+    }
+
+    return true;
+  }
+
+  loadProject(config) {
+    if (this.validateConfig(config)) {
+      this.props.onProjectChosen(config);
+    }
+  }
+
   createNewProject() {
     const projectDirectory = projectPath(this.state.newProjectName);
-
     const projectConfig = {
       video: this.state.videoFile.path,
       subtitles: this.state.subFile.path,
@@ -59,17 +80,18 @@ export default class ProjectSelector extends Component {
     };
 
     // Create the new project directory and save the configuration
-    const configPath = path.join(projectDirectory, CONFIG_FILENAME);
-    u.makeDirectory(projectDirectory);
-    fs.writeFileSync(configPath, JSON.stringify(projectConfig), { encoding: 'utf8' });
-
-    this.props.onProjectChosen(projectConfig);
+    if (this.validateConfig(projectConfig)) {
+      const configPath = path.join(projectDirectory, CONFIG_FILENAME);
+      u.makeDirectory(projectDirectory);
+      fs.writeFileSync(configPath, JSON.stringify(projectConfig), { encoding: 'utf8' });
+      this.loadProject(projectConfig);
+    }
   }
 
   chooseExistingProject(projectName) {
     const configPath = path.join(projectPath(projectName), CONFIG_FILENAME);
     const config = JSON.parse(fs.readFileSync(configPath, { encoding: 'utf8' }));
-    this.props.onProjectChosen(config);
+    this.loadProject(config);
   }
 
   changeProjectName(event) {
