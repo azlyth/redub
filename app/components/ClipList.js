@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { remote } from 'electron';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import subParser from 'subtitles-parser';
@@ -57,9 +58,14 @@ export default class ClipList extends Component {
   }
 
   prepareRecorder() {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-      this.recorder = new MediaRecorder(stream);
-    });
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        this.recorder = new MediaRecorder(stream);
+      })
+      .catch(error => {
+        alert('Come back when you have a mic!');
+        remote.app.quit();
+      });
   }
 
   // duration: time in milliseconds
