@@ -226,7 +226,7 @@ export default class ProjectSelector extends Component {
           disabled={!this.canCreateNewProject()}
           onClick={this.createNewProject}
         >
-          <b>CREATE NEW PROJECT</b>
+          CREATE NEW PROJECT
         </Button>
       </div>
     );
