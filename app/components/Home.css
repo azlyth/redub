@@ -25,6 +25,7 @@
 }
 
 .exportButton {
+  height: 35px;
   margin: 13px 0;
   font-size: 1.3rem;
 }

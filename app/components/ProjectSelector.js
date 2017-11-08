@@ -145,30 +145,29 @@ export default class ProjectSelector extends Component {
   renderProjects() {
     return (
       <div>
-        <h3>Choose existing project:</h3>
+        <h3>Existing projects:</h3>
         <div className={styles.projectListContainer}>
-          <ListGroup className={styles.projectList}>
             {this.state.existingProjects.map((project, index) => {
               return (
-                <ListGroupItem
-                  key={index}
-                  className={styles.project}
-                  onClick={() => { this.chooseExistingProject(project); }}
-                >
-                  <span>
-                    {project}
-                  </span>
+                <div key={index} className={styles.project}>
                   <Button
+                    bsSize="large"
+                    className={styles.chooseProject}
+                    onClick={() => { this.chooseExistingProject(project); }}
+                  >
+                    {project}
+                  </Button>
+                  <Button
+                    bsSize="large"
                     className={styles.deleteProject}
                     bsStyle="danger"
                     onClick={(event) => { this.deleteProject(event, project); }}
                   >
                     <i className={classNames(['fa', 'fa-times'])} />
                   </Button>
-                </ListGroupItem>
+                </div>
               );
             })}
-          </ListGroup>
         </div>
       </div>
     );
@@ -181,9 +180,7 @@ export default class ProjectSelector extends Component {
           <span>
             {this.renderProjects()}
             <br />
-            <div>
-              <h2>OR</h2>
-            </div>
+            <hr />
           </span>
         }
 
