@@ -4,6 +4,7 @@
 
 .fileInput {
   width: 40vw;
+  height: 45px;
 }
 
 .projectListContainer {
@@ -16,6 +17,7 @@
 }
 
 .project {
+  height: 55px;
   color: black !important;
   display: flex;
   justify-content: space-between;
@@ -29,6 +31,7 @@
 }
 
 .newProjectName {
+  height: 45px;
   width: 83.5vw;
   padding: 2px 6px;
   border: 5px solid transparent;
