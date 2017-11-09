@@ -1,3 +1,6 @@
+dependencies:
+	yarn
+
 develop:
 	yarn run dev
 
