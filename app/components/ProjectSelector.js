@@ -4,7 +4,7 @@ import { remote } from 'electron';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { Button, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import * as u from '../utils';
 import FileInput from './FileInput';
 import styles from './ProjectSelector.css';
@@ -147,27 +147,25 @@ export default class ProjectSelector extends Component {
       <div>
         <h3>Existing projects:</h3>
         <div className={styles.projectListContainer}>
-            {this.state.existingProjects.map((project, index) => {
-              return (
-                <div key={index} className={styles.project}>
-                  <Button
-                    bsSize="large"
-                    className={styles.chooseProject}
-                    onClick={() => { this.chooseExistingProject(project); }}
-                  >
-                    {project}
-                  </Button>
-                  <Button
-                    bsSize="large"
-                    className={styles.deleteProject}
-                    bsStyle="danger"
-                    onClick={(event) => { this.deleteProject(event, project); }}
-                  >
-                    <i className={classNames(['fa', 'fa-times'])} />
-                  </Button>
-                </div>
-              );
-            })}
+          {this.state.existingProjects.map((project, index) =>
+            (<div key={index} className={styles.project}>
+              <Button
+                bsSize="large"
+                className={styles.chooseProject}
+                onClick={() => { this.chooseExistingProject(project); }}
+              >
+                {project}
+              </Button>
+              <Button
+                bsSize="large"
+                className={styles.deleteProject}
+                bsStyle="danger"
+                onClick={(event) => { this.deleteProject(event, project); }}
+              >
+                <i className={classNames(['fa', 'fa-times'])} />
+              </Button>
+            </div>)
+          )}
         </div>
       </div>
     );

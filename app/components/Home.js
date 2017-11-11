@@ -79,7 +79,7 @@ export default class Home extends Component {
     const end = u.timeMs(this.state.exportEndTime);
     const percent = (current / (end - start)) * 100;
 
-    this.setState({ exportProgress: Math.round(Number(percent))});
+    this.setState({ exportProgress: Math.round(Number(percent)) });
   }
 
   export() {
@@ -122,7 +122,12 @@ export default class Home extends Component {
       exportEndTime,
       outputPath,
       this.updateExportProgress,
-    ).then(() => { this.setState({ exporting: false }); });
+    )
+      .then(() => {
+        this.setState({ exporting: false });
+        return 'success';
+      })
+      .catch(console.error);
   }
 
   renderHeader() {

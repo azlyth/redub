@@ -61,8 +61,10 @@ export default class ClipList extends Component {
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then(stream => {
         this.recorder = new MediaRecorder(stream);
+        return 'success';
       })
       .catch(error => {
+        console.error(error);
         alert('Come back when you have a mic!');
         remote.app.quit();
       });
