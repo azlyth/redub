@@ -144,6 +144,12 @@ export default class Home extends Component {
           ref={(videoPlayer) => { this.videoPlayer = videoPlayer; }}
         />
       );
+    } else {
+      return (
+        <div className={styles.title}>
+          <p>Redub</p>
+        </div>
+      );
     }
   }
 
