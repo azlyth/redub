@@ -1,7 +1,7 @@
 {
   "name": "redub",
   "productName": "redub",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Redub your shows and movies",
   "main": "./main.prod.js",
   "author": {
