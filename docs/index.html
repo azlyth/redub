@@ -5,36 +5,93 @@
     <meta name="viewport" content="width=device-width" />
     <title>Redub</title>
     <style type="text/css" media="all">
+      html, body, h1, ul { margin: 0; }
       html, body {
+        margin: 0;
         width: 100%;
         height: 100%;
+        min-width: 800px;
       }
       body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      body * {
+        max-width: 400px;
+      }
+      .center {
         display: flex;
         flex-flow: column;
         align-items: center;
         justify-content: center;
       }
       .link {
+        margin-left: 5px;
+      }
+      .left, .right {
         display: inline-block;
-        width: 65px;
-        text-align: center;
+        margin: 20px;
       }
     </style>
   </head>
 
   <body>
-    <h1>Redub</h1>
-    <div>
-      <div class="link">
-        <a href="https://github.com/azlyth/redub/releases/download/v1.0.0/Redub.zip">Mac</a>
+    <div class="left">
+      <div class="center">
+        <h1>Redub</h1>
+
+        <br />
+
+        <div>
+          <p>First, obtain the following:</p>
+          <ul>
+            <li>A microphone</li>
+            <li>A video file (VP8, VP9, Theora, H.264, MPEG-4)</li>
+            <li>The subtitles for that video (SRT)</li>
+          </ul>
+          <p>Then open Redub and:</p>
+          <ul>
+            <li>Create a new project.</li>
+            <li>Start re-dubbing the video, one subtitle at a time.</li>
+            <li>Redub the parts that you want. Doesn't have to be the whole video.</li>
+            <li>When ready, hit <b>Export</b> and the program will create a new video with your recordings replacing the original audio. (The video will start from your first recording and end at your last).</li>
+          </ul>
+
+          <br />
+          <br />
+
+          <div>
+            <span>Download for:</span>
+            <span class="link">
+              <a href="https://github.com/azlyth/redub/releases/download/v1.0.0/Redub.zip">Mac</a>
+            </span>
+            <span class="link">
+              <a href="https://github.com/azlyth/redub/releases/download/v1.0.0/Redub-Setup.exe">Windows</a>
+            </span>
+            <span class="link">
+              <a href="https://github.com/azlyth/redub/releases/download/v1.0.0/Redub.AppImage">Linux</a>
+            </span>
+          </div>
+
+          <br />
+
+          <div>
+            <span>Hyperlinks:</span>
+            <span class="link">
+              <a href="https://github.com/azlyth/redub">GitHub</a>
+            </span>
+            <span class="link">
+              <a href="https://reddit.com/u/azlyth">Me</a>
+            </span>
+          </div>
+
+        </div>
       </div>
-      <div class="link">
-        <a href="https://github.com/azlyth/redub/releases/download/v1.0.0/Redub-Setup.exe">Windows</a>
-      </div>
-      <div class="link">
-        <a href="https://github.com/azlyth/redub/releases/download/v1.0.0/Redub.AppImage">Linux</a>
-      </div>
+    </div>
+
+    <div class="right">
+      <video src="videos/redub.webm" autoplay="true"></video>
     </div>
   </body>
 </html>
